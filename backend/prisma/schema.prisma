@@ -1,0 +1,112 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum ModoActivo {
+  INVITADO
+  ANFITRION
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  ACEPTADA
+  RECHAZADA
+}
+
+enum TipoEspacio {
+  HABITACION
+  APARTAESTUDIO
+  COMPARTIDO
+}
+
+enum TipoPrivacidad {
+  PRIVADO
+  COMPARTIDO
+}
+
+enum EstadoAlojamiento {
+  ACTIVO
+  INACTIVO
+}
+
+model Usuario {
+  id              String        @id @default(uuid())
+  nombre          String
+  correo          String        @unique
+  telefono        String?
+  fotoPerfil      String?
+  modoActivo      ModoActivo    @default(INVITADO)
+  contrasena      String
+  fechaRegistro   DateTime      @default(now())
+  perfilConvivencia PerfilConvivencia?
+  alojamientos    Alojamiento[]
+  reservas        Reserva[]
+  resenas         Resena[]
+}
+
+model PerfilConvivencia {
+  id                   String   @id @default(uuid())
+  aceptaMascotas       Boolean  @default(false)
+  fumador              Boolean  @default(false)
+  horarioRuido         String?
+  preferenciaGenero    String?
+  descripcionAdicional String?
+  usuario              Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId            String   @unique
+}
+
+model Alojamiento {
+  id           String             @id @default(uuid())
+  titulo       String
+  descripcion  String
+  tipoEspacio  TipoEspacio
+  tipoPrivacidad TipoPrivacidad
+  tipoAcceso   String
+  reglas       String?
+  precio       Float
+  ubicacion    String
+  fotografias  String[]
+  estado       EstadoAlojamiento  @default(ACTIVO)
+  anfitrion    Usuario            @relation(fields: [anfitrionId], references: [id])
+  anfitrionId  String
+  servicios    Servicio[]
+  reservas     Reserva[]
+  resenas      Resena[]
+  creadoEn     DateTime           @default(now())
+}
+
+model Servicio {
+  id           String       @id @default(uuid())
+  nombre       String
+  descripcion  String?
+  alojamiento  Alojamiento  @relation(fields: [alojamientoId], references: [id])
+  alojamientoId String
+}
+
+model Reserva {
+  id             String        @id @default(uuid())
+  fechaIngreso   DateTime
+  duracionMeses  Int
+  estado         EstadoReserva @default(PENDIENTE)
+  fechaSolicitud DateTime      @default(now())
+  invitado       Usuario       @relation(fields: [invitadoId], references: [id])
+  invitadoId     String
+  alojamiento    Alojamiento   @relation(fields: [alojamientoId], references: [id])
+  alojamientoId  String
+}
+
+model Resena {
+  id            String      @id @default(uuid())
+  calificacion  Int
+  comentario    String?
+  fecha         DateTime    @default(now())
+  autor         Usuario     @relation(fields: [autorId], references: [id])
+  autorId       String
+  alojamiento   Alojamiento @relation(fields: [alojamientoId], references: [id])
+  alojamientoId String
+}
