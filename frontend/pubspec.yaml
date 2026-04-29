@@ -1,3 +1,11 @@
+name: nido_app
+description: Frontend Flutter para NidoApp.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: "^3.7.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -19,3 +27,8 @@ dependencies:
   
   # Igualdad de objetos
   equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
