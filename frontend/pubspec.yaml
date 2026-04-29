@@ -1,0 +1,21 @@
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # HTTP y API
+  dio: ^5.4.0
+  
+  # Manejo de estado
+  flutter_riverpod: ^2.5.1
+  
+  # Almacenamiento seguro del token JWT
+  flutter_secure_storage: ^9.0.0
+  
+  # Inyección de dependencias
+  get_it: ^7.6.7
+  
+  # Funcional / Either para manejo de errores
+  dartz: ^0.10.1
+  
+  # Igualdad de objetos
+  equatable: ^2.0.5
