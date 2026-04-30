@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/di/injection_container.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/presentation/pages/register_page.dart';
 import 'features/style_guide/presentation/style_guide_page.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupDependencies();
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,8 +20,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'NidoApp',
       theme: AppTheme.light,
-      routes: {'/style-guide': (_) => const StyleGuidePage()},
+      routes: {
+        '/style-guide': (_) => const StyleGuidePage(),
+        '/register': (_) => RegisterPage(),
+        '/login': (_) => const _LoginPlaceholderPage(),
+      },
       home: const MyHomePage(title: 'NidoApp'),
+    );
+  }
+}
+
+class _LoginPlaceholderPage extends StatelessWidget {
+  const _LoginPlaceholderPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: const Center(
+        child: Text('Pantalla de login pendiente'),
+      ),
     );
   }
 }
