@@ -101,6 +101,20 @@ const authService = {
     await userRepository.updatePassword(usuario.id, hashedPassword);
     await userRepository.clearResetCode(usuario.id);
   },
+
+  async updateActiveMode({ usuarioId, modoActivo }) {
+    const allowedModes = ['INVITADO', 'ANFITRION'];
+
+    if (!allowedModes.includes(modoActivo)) {
+      const error = new Error('Modo activo invalido');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const updatedUser = await userRepository.updateModoActivo(usuarioId, modoActivo);
+    const { contrasena: _omitPassword, ...safeUser } = updatedUser;
+    return safeUser;
+  },
 };
 
 module.exports = authService;

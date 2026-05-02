@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/token_storage_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../providers/active_mode_provider.dart';
 import 'login_page.dart';
 
 // Verifica si hay sesion activa al abrir la app.
 // Si existe token, navega al home. Si no, muestra el login.
-class AuthCheckPage extends StatefulWidget {
+class AuthCheckPage extends ConsumerStatefulWidget {
   const AuthCheckPage({super.key});
 
   @override
-  State<AuthCheckPage> createState() => _AuthCheckPageState();
+  ConsumerState<AuthCheckPage> createState() => _AuthCheckPageState();
 }
 
-class _AuthCheckPageState extends State<AuthCheckPage> {
+class _AuthCheckPageState extends ConsumerState<AuthCheckPage> {
   @override
   void initState() {
     super.initState();
@@ -28,11 +30,13 @@ class _AuthCheckPageState extends State<AuthCheckPage> {
     if (!mounted) return;
 
     if (hasToken) {
+      await ref.read(activeModeProvider.notifier).loadFromSession();
+      if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/home');
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => LoginPage()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute<void>(builder: (_) => LoginPage()));
     }
   }
 
@@ -40,9 +44,7 @@ class _AuthCheckPageState extends State<AuthCheckPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: AppColors.background,
-      body: Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
-      ),
+      body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
     );
   }
 }

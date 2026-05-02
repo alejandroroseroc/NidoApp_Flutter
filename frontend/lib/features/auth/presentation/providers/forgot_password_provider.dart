@@ -39,7 +39,7 @@ class ForgotPasswordState {
 
 class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
   ForgotPasswordNotifier(this._forgotUseCase, this._resetUseCase)
-      : super(const ForgotPasswordState());
+    : super(const ForgotPasswordState());
 
   final ForgotPasswordUseCase _forgotUseCase;
   final ResetPasswordUseCase _resetUseCase;
@@ -50,15 +50,17 @@ class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
     final result = await _forgotUseCase(correo);
 
     result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        errorMessage: failure.message,
-      ),
-      (_) => state = state.copyWith(
-        isLoading: false,
-        codigoEnviado: true,
-        correo: correo,
-      ),
+      (failure) =>
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: failure.message,
+          ),
+      (_) =>
+          state = state.copyWith(
+            isLoading: false,
+            codigoEnviado: true,
+            correo: correo,
+          ),
     );
   }
 
@@ -79,14 +81,12 @@ class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
     );
 
     result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        errorMessage: failure.message,
-      ),
-      (_) => state = state.copyWith(
-        isLoading: false,
-        resetExitoso: true,
-      ),
+      (failure) =>
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: failure.message,
+          ),
+      (_) => state = state.copyWith(isLoading: false, resetExitoso: true),
     );
   }
 
@@ -97,5 +97,5 @@ class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
 
 final forgotPasswordProvider =
     StateNotifierProvider<ForgotPasswordNotifier, ForgotPasswordState>(
-  (ref) => sl<ForgotPasswordNotifier>(),
-);
+      (ref) => sl<ForgotPasswordNotifier>(),
+    );

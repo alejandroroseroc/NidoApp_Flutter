@@ -26,7 +26,8 @@ class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<RegisterState>(registerProvider, (previous, next) {
-      if (next.errorMessage != null && previous?.errorMessage != next.errorMessage) {
+      if (next.errorMessage != null &&
+          previous?.errorMessage != next.errorMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColors.error,
@@ -73,11 +74,14 @@ class RegisterPage extends ConsumerWidget {
                 AppTextField(
                   label: 'Nombre completo',
                   prefixIcon: const Icon(Icons.person_outline),
-                  onChanged: (value) => ref.read(_nameProvider.notifier).state = value.trim(),
+                  onChanged:
+                      (value) =>
+                          ref.read(_nameProvider.notifier).state = value.trim(),
                   validator: (value) {
                     final text = value?.trim() ?? '';
                     if (text.isEmpty) return 'El nombre es obligatorio';
-                    if (text.length < 2) return 'Debe tener minimo 2 caracteres';
+                    if (text.length < 2)
+                      return 'Debe tener minimo 2 caracteres';
                     return null;
                   },
                   keyboardType: TextInputType.name,
@@ -87,11 +91,15 @@ class RegisterPage extends ConsumerWidget {
                   label: 'Correo electronico',
                   prefixIcon: const Icon(Icons.email_outlined),
                   keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) => ref.read(_emailProvider.notifier).state = value.trim(),
+                  onChanged:
+                      (value) =>
+                          ref.read(_emailProvider.notifier).state =
+                              value.trim(),
                   validator: (value) {
                     final text = value?.trim() ?? '';
                     if (text.isEmpty) return 'El correo es obligatorio';
-                    if (!_emailRegex.hasMatch(text)) return 'Ingresa un correo valido';
+                    if (!_emailRegex.hasMatch(text))
+                      return 'Ingresa un correo valido';
                     return null;
                   },
                 ),
@@ -102,19 +110,25 @@ class RegisterPage extends ConsumerWidget {
                   obscureText: !isPasswordVisible,
                   suffixIcon: IconButton(
                     onPressed: () {
-                      ref.read(_passwordVisibleProvider.notifier).state = !isPasswordVisible;
+                      ref.read(_passwordVisibleProvider.notifier).state =
+                          !isPasswordVisible;
                     },
                     icon: Icon(
-                      isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      isPasswordVisible
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                     ),
                   ),
                   validator: (value) {
                     final text = value ?? '';
                     if (text.isEmpty) return 'La contrasena es obligatoria';
-                    if (text.length < 8) return 'Debe tener minimo 8 caracteres';
+                    if (text.length < 8)
+                      return 'Debe tener minimo 8 caracteres';
                     return null;
                   },
-                  onChanged: (value) => ref.read(_passwordProvider.notifier).state = value,
+                  onChanged:
+                      (value) =>
+                          ref.read(_passwordProvider.notifier).state = value,
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
@@ -140,14 +154,20 @@ class RegisterPage extends ConsumerWidget {
                     }
                     return null;
                   },
-                  onChanged: (value) => ref.read(_confirmPasswordProvider.notifier).state = value,
+                  onChanged:
+                      (value) =>
+                          ref.read(_confirmPasswordProvider.notifier).state =
+                              value,
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
                   label: 'Telefono',
                   prefixIcon: const Icon(Icons.phone_outlined),
                   keyboardType: TextInputType.phone,
-                  onChanged: (value) => ref.read(_phoneProvider.notifier).state = value.trim(),
+                  onChanged:
+                      (value) =>
+                          ref.read(_phoneProvider.notifier).state =
+                              value.trim(),
                   validator: (value) {
                     final text = value?.trim() ?? '';
                     if (text.isEmpty) return 'El telefono es obligatorio';
@@ -170,7 +190,9 @@ class RegisterPage extends ConsumerWidget {
                     final contrasena = ref.read(_passwordProvider);
                     final telefono = ref.read(_phoneProvider);
 
-                    ref.read(registerProvider.notifier).register(
+                    ref
+                        .read(registerProvider.notifier)
+                        .register(
                           nombre: nombre,
                           correo: correo,
                           contrasena: contrasena,

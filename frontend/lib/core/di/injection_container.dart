@@ -9,6 +9,8 @@ import '../../features/auth/domain/usecases/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/domain/usecases/reset_password_usecase.dart';
+import '../../features/auth/domain/usecases/update_active_mode_usecase.dart';
+import '../../features/auth/presentation/providers/active_mode_provider.dart';
 import '../../features/auth/presentation/providers/forgot_password_provider.dart';
 import '../../features/auth/presentation/providers/login_provider.dart';
 import '../../features/auth/presentation/providers/register_provider.dart';
@@ -37,7 +39,9 @@ Future<void> setupDependencies() async {
     () => TokenStorageService(sl()),
   );
 
-  sl.registerLazySingleton<AuthRemoteDatasource>(() => AuthRemoteDatasourceImpl(sl()));
+  sl.registerLazySingleton<AuthRemoteDatasource>(
+    () => AuthRemoteDatasourceImpl(sl(), sl()),
+  );
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
 
   sl.registerFactory(() => RegisterUseCase(sl()));
@@ -49,4 +53,7 @@ Future<void> setupDependencies() async {
   sl.registerFactory(() => ForgotPasswordUseCase(sl()));
   sl.registerFactory(() => ResetPasswordUseCase(sl()));
   sl.registerFactory(() => ForgotPasswordNotifier(sl(), sl()));
+
+  sl.registerFactory(() => UpdateActiveModeUseCase(sl()));
+  sl.registerFactory(() => ActiveModeNotifier(sl(), sl()));
 }

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failures.dart';
+import '../entities/usuario.dart';
 
 // Contrato del repositorio de autenticacion.
 abstract class AuthRepository {
@@ -22,5 +23,9 @@ abstract class AuthRepository {
     required String correo,
     required String codigo,
     required String nuevaContrasena,
+  });
+
+  Future<Either<Failure, Usuario>> updateActiveMode({
+    required ModoActivo modoActivo,
   });
 }

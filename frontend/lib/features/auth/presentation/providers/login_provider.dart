@@ -37,7 +37,7 @@ class LoginState {
 
 class LoginNotifier extends StateNotifier<LoginState> {
   LoginNotifier(this._loginUseCase, this._tokenStorage)
-      : super(const LoginState());
+    : super(const LoginState());
 
   final LoginUseCase _loginUseCase;
   final TokenStorageService _tokenStorage;
@@ -63,7 +63,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
       (data) async {
         final token = data['token'] as String;
         final usuario = data['usuario'] as Usuario;
-        await _tokenStorage.saveToken(token);
+        await _tokenStorage.saveSession(token: token, usuario: usuario);
         state = state.copyWith(
           isLoading: false,
           isSuccess: true,

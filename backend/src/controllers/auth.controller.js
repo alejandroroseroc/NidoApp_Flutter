@@ -61,6 +61,23 @@ const authController = {
       next(error);
     }
   },
+
+  async updateMode(req, res, next) {
+    try {
+      const { modoActivo } = req.body;
+      const usuario = await authService.updateActiveMode({
+        usuarioId: req.user.id,
+        modoActivo,
+      });
+
+      res.status(200).json({
+        message: 'Modo activo actualizado correctamente',
+        data: { usuario },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = authController;

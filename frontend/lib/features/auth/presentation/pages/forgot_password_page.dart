@@ -21,7 +21,8 @@ class ForgotPasswordPage extends ConsumerWidget {
     final state = ref.watch(forgotPasswordProvider);
 
     ref.listen<ForgotPasswordState>(forgotPasswordProvider, (previous, next) {
-      if (next.errorMessage != null && previous?.errorMessage != next.errorMessage) {
+      if (next.errorMessage != null &&
+          previous?.errorMessage != next.errorMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColors.error,
@@ -55,9 +56,10 @@ class ForgotPasswordPage extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: state.codigoEnviado
-              ? _ResetForm(formKey: _resetFormKey, state: state)
-              : _EmailForm(formKey: _emailFormKey, emailRegex: _emailRegex),
+          child:
+              state.codigoEnviado
+                  ? _ResetForm(formKey: _resetFormKey, state: state)
+                  : _EmailForm(formKey: _emailFormKey, emailRegex: _emailRegex),
         ),
       ),
     );
@@ -101,8 +103,10 @@ class _EmailForm extends ConsumerWidget {
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) => correo = value.trim(),
             validator: (value) {
-              if (value == null || value.trim().isEmpty) return 'El correo es obligatorio';
-              if (!emailRegex.hasMatch(value.trim())) return 'Ingresa un correo valido';
+              if (value == null || value.trim().isEmpty)
+                return 'El correo es obligatorio';
+              if (!emailRegex.hasMatch(value.trim()))
+                return 'Ingresa un correo valido';
               return null;
             },
           ),
@@ -181,8 +185,10 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
               LengthLimitingTextInputFormatter(6),
             ],
             validator: (value) {
-              if (value == null || value.trim().isEmpty) return 'El codigo es obligatorio';
-              if (value.trim().length != 6) return 'El codigo debe tener 6 digitos';
+              if (value == null || value.trim().isEmpty)
+                return 'El codigo es obligatorio';
+              if (value.trim().length != 6)
+                return 'El codigo debe tener 6 digitos';
               return null;
             },
           ),
@@ -199,7 +205,8 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
               onPressed: () => setState(() => _nuevaVisible = !_nuevaVisible),
             ),
             validator: (value) {
-              if (value == null || value.isEmpty) return 'La contrasena es obligatoria';
+              if (value == null || value.isEmpty)
+                return 'La contrasena es obligatoria';
               if (value.length < 8) return 'Minimo 8 caracteres';
               return null;
             },
@@ -214,10 +221,12 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
                 _confirmarVisible ? Icons.visibility_off : Icons.visibility,
                 color: AppColors.textSecondary,
               ),
-              onPressed: () => setState(() => _confirmarVisible = !_confirmarVisible),
+              onPressed:
+                  () => setState(() => _confirmarVisible = !_confirmarVisible),
             ),
             validator: (value) {
-              if (value == null || value.isEmpty) return 'Confirma tu contrasena';
+              if (value == null || value.isEmpty)
+                return 'Confirma tu contrasena';
               if (value != _nuevaContrasenaController.text) {
                 return 'Las contrasenas no coinciden';
               }
@@ -230,7 +239,9 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
             isLoading: widget.state.isLoading,
             onPressed: () {
               if (widget.formKey.currentState?.validate() ?? false) {
-                ref.read(forgotPasswordProvider.notifier).resetearContrasena(
+                ref
+                    .read(forgotPasswordProvider.notifier)
+                    .resetearContrasena(
                       codigo: _codigoController.text.trim(),
                       nuevaContrasena: _nuevaContrasenaController.text,
                     );
@@ -239,7 +250,8 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
           ),
           const SizedBox(height: 16),
           TextButton(
-            onPressed: () => ref.read(forgotPasswordProvider.notifier).reiniciar(),
+            onPressed:
+                () => ref.read(forgotPasswordProvider.notifier).reiniciar(),
             child: Text(
               'Usar otro correo',
               style: AppTextStyles.body.copyWith(color: AppColors.primary),

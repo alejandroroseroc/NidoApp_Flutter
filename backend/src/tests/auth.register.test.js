@@ -1,9 +1,12 @@
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'test_secret';
+
 const authService = require('../services/auth.service');
 const userRepository = require('../repositories/user.repository');
 
 jest.mock('../repositories/user.repository', () => ({
   findByEmail: jest.fn(),
   create: jest.fn(),
+  updateModoActivo: jest.fn(),
 }));
 
 describe('AuthService.registerUser', () => {
@@ -29,14 +32,17 @@ describe('AuthService.registerUser', () => {
       telefono: '3001234567',
     });
 
-    expect(result).toEqual({
-      id: 'user-1',
-      nombre: 'Diego Rosero',
-      correo: 'diego@nidoapp.com',
-      telefono: '3001234567',
-      modoActivo: 'INVITADO',
+    expect(result).toMatchObject({
+      token: expect.any(String),
+      usuario: {
+        id: 'user-1',
+        nombre: 'Diego Rosero',
+        correo: 'diego@nidoapp.com',
+        telefono: '3001234567',
+        modoActivo: 'INVITADO',
+      },
     });
-    expect(result.contrasena).toBeUndefined();
+    expect(result.usuario.contrasena).toBeUndefined();
   });
 
   test('lanza error 409 si el correo ya existe', async () => {
@@ -77,5 +83,52 @@ describe('AuthService.registerUser', () => {
     const sentData = userRepository.create.mock.calls[0][0];
     expect(sentData.contrasena).toBeDefined();
     expect(sentData.contrasena).not.toBe(plainPassword);
+  });
+});
+
+describe('AuthService.updateActiveMode', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('actualiza modo activo a anfitrion y retorna usuario seguro', async () => {
+    userRepository.updateModoActivo.mockResolvedValue({
+      id: 'user-1',
+      nombre: 'Diego Rosero',
+      correo: 'diego@nidoapp.com',
+      telefono: '3001234567',
+      modoActivo: 'ANFITRION',
+      contrasena: 'hash',
+    });
+
+    const result = await authService.updateActiveMode({
+      usuarioId: 'user-1',
+      modoActivo: 'ANFITRION',
+    });
+
+    expect(userRepository.updateModoActivo).toHaveBeenCalledWith(
+      'user-1',
+      'ANFITRION',
+    );
+    expect(result).toEqual({
+      id: 'user-1',
+      nombre: 'Diego Rosero',
+      correo: 'diego@nidoapp.com',
+      telefono: '3001234567',
+      modoActivo: 'ANFITRION',
+    });
+    expect(result.contrasena).toBeUndefined();
+  });
+
+  test('rechaza modos no permitidos', async () => {
+    await expect(
+      authService.updateActiveMode({
+        usuarioId: 'user-1',
+        modoActivo: 'ADMIN',
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'Modo activo invalido',
+    });
   });
 });

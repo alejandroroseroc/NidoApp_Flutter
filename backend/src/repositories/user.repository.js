@@ -45,6 +45,13 @@ const userRepository = {
       data: { contrasena: hashedPassword },
     });
   },
+
+  async updateModoActivo(id, modoActivo) {
+    return prisma.usuario.update({
+      where: { id },
+      data: { modoActivo },
+    });
+  },
 };
 
 module.exports = userRepository;

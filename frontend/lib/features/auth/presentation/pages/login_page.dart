@@ -32,7 +32,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     ref.listen<LoginState>(loginProvider, (previous, next) {
-      if (next.errorMessage != null && previous?.errorMessage != next.errorMessage) {
+      if (next.errorMessage != null &&
+          previous?.errorMessage != next.errorMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColors.error,
@@ -74,7 +75,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 const SizedBox(height: 8),
                 Text(
                   'Inicia sesion en tu cuenta',
-                  style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
@@ -99,11 +102,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   obscureText: !_contrasenaVisible,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _contrasenaVisible ? Icons.visibility_off : Icons.visibility,
+                      _contrasenaVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: AppColors.textSecondary,
                     ),
-                    onPressed: () =>
-                        setState(() => _contrasenaVisible = !_contrasenaVisible),
+                    onPressed:
+                        () => setState(
+                          () => _contrasenaVisible = !_contrasenaVisible,
+                        ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -118,7 +125,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   isLoading: loginState.isLoading,
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      ref.read(loginProvider.notifier).login(
+                      ref
+                          .read(loginProvider.notifier)
+                          .login(
                             correo: _correoController.text.trim(),
                             contrasena: _contrasenaController.text,
                           );
@@ -127,10 +136,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 const SizedBox(height: 8),
                 TextButton(
-                  onPressed: () => Navigator.of(context).pushNamed('/forgot-password'),
+                  onPressed:
+                      () => Navigator.of(context).pushNamed('/forgot-password'),
                   child: Text(
                     'Olvidaste tu contrasena',
-                    style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -138,7 +150,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   onPressed: () => Navigator.of(context).pushNamed('/register'),
                   child: Text(
                     'No tienes cuenta? Registrate',
-                    style: AppTextStyles.body.copyWith(color: AppColors.primary),
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ],

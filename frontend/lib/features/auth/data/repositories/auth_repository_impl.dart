@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/entities/usuario.dart';
 import '../datasources/auth_remote_datasource.dart';
 
 // Adapta errores de infraestructura al dominio.
@@ -76,6 +77,22 @@ class AuthRepositoryImpl implements AuthRepository {
         nuevaContrasena: nuevaContrasena,
       );
       return const Right(null);
+    } on ServerException catch (error) {
+      return Left(ServerFailure(error.message));
+    } catch (_) {
+      return const Left(ServerFailure('Ocurrio un error inesperado'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Usuario>> updateActiveMode({
+    required ModoActivo modoActivo,
+  }) async {
+    try {
+      final usuario = await remoteDatasource.updateActiveMode(
+        modoActivo: modoActivo,
+      );
+      return Right(usuario);
     } on ServerException catch (error) {
       return Left(ServerFailure(error.message));
     } catch (_) {

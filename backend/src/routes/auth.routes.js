@@ -1,6 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/auth.controller');
+const requireAuth = require('../middlewares/auth.middleware');
 const validateRequest = require('../middlewares/validate.middleware');
 
 const router = express.Router();
@@ -69,9 +70,18 @@ const resetPasswordValidations = [
     .withMessage('La contrasena debe tener minimo 8 caracteres'),
 ];
 
+const updateModeValidations = [
+  body('modoActivo')
+    .notEmpty()
+    .withMessage('El modo activo es obligatorio')
+    .isIn(['INVITADO', 'ANFITRION'])
+    .withMessage('El modo activo debe ser INVITADO o ANFITRION'),
+];
+
 router.post('/register', registerValidations, validateRequest, authController.register);
 router.post('/login', loginValidations, validateRequest, authController.login);
 router.post('/forgot-password', forgotPasswordValidations, validateRequest, authController.forgotPassword);
 router.post('/reset-password', resetPasswordValidations, validateRequest, authController.resetPassword);
+router.patch('/mode', requireAuth, updateModeValidations, validateRequest, authController.updateMode);
 
 module.exports = router;

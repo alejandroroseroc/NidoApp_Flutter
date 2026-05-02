@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/services/token_storage_service.dart';
+import '../../domain/entities/usuario.dart';
 import '../models/usuario_model.dart';
 
 // Define el contrato para llamadas remotas de autenticacion.
@@ -24,12 +26,15 @@ abstract class AuthRemoteDatasource {
     required String codigo,
     required String nuevaContrasena,
   });
+
+  Future<Usuario> updateActiveMode({required ModoActivo modoActivo});
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
-  const AuthRemoteDatasourceImpl(this.dio);
+  const AuthRemoteDatasourceImpl(this.dio, this.tokenStorage);
 
   final Dio dio;
+  final TokenStorageService tokenStorage;
 
   @override
   Future<Map<String, dynamic>> registerUser({
@@ -57,7 +62,9 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       final data = payload['data'] as Map<String, dynamic>;
       return {
         'token': data['token'] as String,
-        'usuario': UsuarioModel.fromJson(data['usuario'] as Map<String, dynamic>),
+        'usuario': UsuarioModel.fromJson(
+          data['usuario'] as Map<String, dynamic>,
+        ),
       };
     } on DioException catch (error) {
       final dynamic data = error.response?.data;
@@ -84,7 +91,9 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       final data = payload['data'] as Map<String, dynamic>;
       return {
         'token': data['token'] as String,
-        'usuario': UsuarioModel.fromJson(data['usuario'] as Map<String, dynamic>),
+        'usuario': UsuarioModel.fromJson(
+          data['usuario'] as Map<String, dynamic>,
+        ),
       };
     } on DioException catch (error) {
       final dynamic data = error.response?.data;
@@ -117,17 +126,43 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     required String nuevaContrasena,
   }) async {
     try {
-      await dio.post('/api/auth/reset-password', data: {
-        'correo': correo,
-        'codigo': codigo,
-        'nuevaContrasena': nuevaContrasena,
-      });
+      await dio.post(
+        '/api/auth/reset-password',
+        data: {
+          'correo': correo,
+          'codigo': codigo,
+          'nuevaContrasena': nuevaContrasena,
+        },
+      );
     } on DioException catch (error) {
       final dynamic data = error.response?.data;
       final message =
           data is Map<String, dynamic> && data['error'] is String
               ? data['error'] as String
               : 'Error al restablecer la contrasena';
+      throw ServerException(message);
+    }
+  }
+
+  @override
+  Future<Usuario> updateActiveMode({required ModoActivo modoActivo}) async {
+    try {
+      final token = await tokenStorage.getToken();
+      final response = await dio.patch(
+        '/api/auth/mode',
+        data: {'modoActivo': UsuarioModel.modoActivoToString(modoActivo)},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final payload = response.data as Map<String, dynamic>;
+      final data = payload['data'] as Map<String, dynamic>;
+      return UsuarioModel.fromJson(data['usuario'] as Map<String, dynamic>);
+    } on DioException catch (error) {
+      final dynamic data = error.response?.data;
+      final message =
+          data is Map<String, dynamic> && data['error'] is String
+              ? data['error'] as String
+              : 'No se pudo actualizar el modo activo';
       throw ServerException(message);
     }
   }

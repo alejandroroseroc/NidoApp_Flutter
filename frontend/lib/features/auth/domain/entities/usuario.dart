@@ -21,5 +21,12 @@ class Usuario extends Equatable {
   final ModoActivo modoActivo;
 
   @override
-  List<Object?> get props => [id, nombre, correo, telefono, fotoPerfil, modoActivo];
+  List<Object?> get props => [
+    id,
+    nombre,
+    correo,
+    telefono,
+    fotoPerfil,
+    modoActivo,
+  ];
 }

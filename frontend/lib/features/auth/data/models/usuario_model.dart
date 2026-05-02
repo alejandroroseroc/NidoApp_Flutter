@@ -18,7 +18,18 @@ class UsuarioModel extends Usuario {
       correo: json['correo'] as String,
       telefono: json['telefono'] as String?,
       fotoPerfil: json['fotoPerfil'] as String?,
-      modoActivo: _modoActivoFromString(json['modoActivo'] as String?),
+      modoActivo: modoActivoFromString(json['modoActivo'] as String?),
+    );
+  }
+
+  factory UsuarioModel.fromEntity(Usuario usuario) {
+    return UsuarioModel(
+      id: usuario.id,
+      nombre: usuario.nombre,
+      correo: usuario.correo,
+      telefono: usuario.telefono,
+      fotoPerfil: usuario.fotoPerfil,
+      modoActivo: usuario.modoActivo,
     );
   }
 
@@ -29,11 +40,11 @@ class UsuarioModel extends Usuario {
       'correo': correo,
       'telefono': telefono,
       'fotoPerfil': fotoPerfil,
-      'modoActivo': _modoActivoToString(modoActivo),
+      'modoActivo': modoActivoToString(modoActivo),
     };
   }
 
-  static ModoActivo _modoActivoFromString(String? value) {
+  static ModoActivo modoActivoFromString(String? value) {
     switch (value) {
       case 'ANFITRION':
         return ModoActivo.anfitrion;
@@ -43,7 +54,7 @@ class UsuarioModel extends Usuario {
     }
   }
 
-  static String _modoActivoToString(ModoActivo mode) {
+  static String modoActivoToString(ModoActivo mode) {
     switch (mode) {
       case ModoActivo.anfitrion:
         return 'ANFITRION';

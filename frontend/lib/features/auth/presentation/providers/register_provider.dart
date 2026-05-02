@@ -37,7 +37,7 @@ class RegisterState {
 
 class RegisterNotifier extends StateNotifier<RegisterState> {
   RegisterNotifier(this._registerUseCase, this._tokenStorage)
-      : super(const RegisterState());
+    : super(const RegisterState());
 
   final RegisterUseCase _registerUseCase;
   final TokenStorageService _tokenStorage;
@@ -70,7 +70,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
       (data) async {
         final token = data['token'] as String;
         final usuario = data['usuario'] as Usuario;
-        await _tokenStorage.saveToken(token);
+        await _tokenStorage.saveSession(token: token, usuario: usuario);
         state = state.copyWith(
           isLoading: false,
           isSuccess: true,
