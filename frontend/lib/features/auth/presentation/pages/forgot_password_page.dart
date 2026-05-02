@@ -103,10 +103,12 @@ class _EmailForm extends ConsumerWidget {
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) => correo = value.trim(),
             validator: (value) {
-              if (value == null || value.trim().isEmpty)
+              if (value == null || value.trim().isEmpty) {
                 return 'El correo es obligatorio';
-              if (!emailRegex.hasMatch(value.trim()))
+              }
+              if (!emailRegex.hasMatch(value.trim())) {
                 return 'Ingresa un correo valido';
+              }
               return null;
             },
           ),
@@ -185,10 +187,12 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
               LengthLimitingTextInputFormatter(6),
             ],
             validator: (value) {
-              if (value == null || value.trim().isEmpty)
+              if (value == null || value.trim().isEmpty) {
                 return 'El codigo es obligatorio';
-              if (value.trim().length != 6)
+              }
+              if (value.trim().length != 6) {
                 return 'El codigo debe tener 6 digitos';
+              }
               return null;
             },
           ),
@@ -205,8 +209,9 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
               onPressed: () => setState(() => _nuevaVisible = !_nuevaVisible),
             ),
             validator: (value) {
-              if (value == null || value.isEmpty)
+              if (value == null || value.isEmpty) {
                 return 'La contrasena es obligatoria';
+              }
               if (value.length < 8) return 'Minimo 8 caracteres';
               return null;
             },
@@ -225,8 +230,9 @@ class _ResetFormState extends ConsumerState<_ResetForm> {
                   () => setState(() => _confirmarVisible = !_confirmarVisible),
             ),
             validator: (value) {
-              if (value == null || value.isEmpty)
+              if (value == null || value.isEmpty) {
                 return 'Confirma tu contrasena';
+              }
               if (value != _nuevaContrasenaController.text) {
                 return 'Las contrasenas no coinciden';
               }

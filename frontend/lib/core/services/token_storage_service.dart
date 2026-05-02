@@ -59,6 +59,7 @@ class TokenStorageService {
         correo: usuario.correo,
         telefono: usuario.telefono,
         fotoPerfil: usuario.fotoPerfil,
+        descripcion: usuario.descripcion,
         modoActivo: modoActivo,
       ),
     );

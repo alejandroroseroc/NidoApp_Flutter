@@ -39,6 +39,12 @@ class HomePage extends ConsumerWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
+            tooltip: 'Mi perfil',
+            icon: const Icon(Icons.person_outline, color: Colors.white),
+            onPressed: () => Navigator.of(context).pushNamed('/profile'),
+          ),
+          IconButton(
+            tooltip: 'Cerrar sesion',
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
               await sl<TokenStorageService>().clearSession();

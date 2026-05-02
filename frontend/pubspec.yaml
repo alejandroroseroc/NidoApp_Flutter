@@ -27,8 +27,12 @@ dependencies:
   
   # Igualdad de objetos
   equatable: ^2.0.5
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

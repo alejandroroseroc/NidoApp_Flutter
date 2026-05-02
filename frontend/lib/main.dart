@@ -8,6 +8,7 @@ import 'features/auth/presentation/pages/forgot_password_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/profile/presentation/pages/profile_page.dart';
 import 'features/style_guide/presentation/style_guide_page.dart';
 
 Future<void> main() async {
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/login': (_) => const LoginPage(),
         '/forgot-password': (_) => ForgotPasswordPage(),
         '/home': (_) => const HomePage(),
+        '/profile': (_) => const ProfilePage(),
       },
       home: const AuthCheckPage(),
     );

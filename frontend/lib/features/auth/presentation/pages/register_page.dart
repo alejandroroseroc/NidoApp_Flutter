@@ -80,8 +80,9 @@ class RegisterPage extends ConsumerWidget {
                   validator: (value) {
                     final text = value?.trim() ?? '';
                     if (text.isEmpty) return 'El nombre es obligatorio';
-                    if (text.length < 2)
+                    if (text.length < 2) {
                       return 'Debe tener minimo 2 caracteres';
+                    }
                     return null;
                   },
                   keyboardType: TextInputType.name,
@@ -98,8 +99,9 @@ class RegisterPage extends ConsumerWidget {
                   validator: (value) {
                     final text = value?.trim() ?? '';
                     if (text.isEmpty) return 'El correo es obligatorio';
-                    if (!_emailRegex.hasMatch(text))
+                    if (!_emailRegex.hasMatch(text)) {
                       return 'Ingresa un correo valido';
+                    }
                     return null;
                   },
                 ),
@@ -122,8 +124,9 @@ class RegisterPage extends ConsumerWidget {
                   validator: (value) {
                     final text = value ?? '';
                     if (text.isEmpty) return 'La contrasena es obligatoria';
-                    if (text.length < 8)
+                    if (text.length < 8) {
                       return 'Debe tener minimo 8 caracteres';
+                    }
                     return null;
                   },
                   onChanged:

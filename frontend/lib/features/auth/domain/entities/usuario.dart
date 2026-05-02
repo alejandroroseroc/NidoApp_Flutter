@@ -11,6 +11,7 @@ class Usuario extends Equatable {
     required this.modoActivo,
     this.telefono,
     this.fotoPerfil,
+    this.descripcion,
   });
 
   final String id;
@@ -18,6 +19,7 @@ class Usuario extends Equatable {
   final String correo;
   final String? telefono;
   final String? fotoPerfil;
+  final String? descripcion;
   final ModoActivo modoActivo;
 
   @override
@@ -27,6 +29,7 @@ class Usuario extends Equatable {
     correo,
     telefono,
     fotoPerfil,
+    descripcion,
     modoActivo,
   ];
 }

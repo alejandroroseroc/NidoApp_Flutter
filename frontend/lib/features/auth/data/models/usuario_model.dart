@@ -9,6 +9,7 @@ class UsuarioModel extends Usuario {
     required super.modoActivo,
     super.telefono,
     super.fotoPerfil,
+    super.descripcion,
   });
 
   factory UsuarioModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +19,7 @@ class UsuarioModel extends Usuario {
       correo: json['correo'] as String,
       telefono: json['telefono'] as String?,
       fotoPerfil: json['fotoPerfil'] as String?,
+      descripcion: json['descripcion'] as String?,
       modoActivo: modoActivoFromString(json['modoActivo'] as String?),
     );
   }
@@ -29,6 +31,7 @@ class UsuarioModel extends Usuario {
       correo: usuario.correo,
       telefono: usuario.telefono,
       fotoPerfil: usuario.fotoPerfil,
+      descripcion: usuario.descripcion,
       modoActivo: usuario.modoActivo,
     );
   }
@@ -40,6 +43,7 @@ class UsuarioModel extends Usuario {
       'correo': correo,
       'telefono': telefono,
       'fotoPerfil': fotoPerfil,
+      'descripcion': descripcion,
       'modoActivo': modoActivoToString(modoActivo),
     };
   }
