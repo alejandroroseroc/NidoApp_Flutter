@@ -18,6 +18,33 @@ const userRepository = {
       },
     });
   },
+
+  async findById(id) {
+    return prisma.usuario.findUnique({
+      where: { id },
+    });
+  },
+
+  async saveResetCode(correo, codigo, expira) {
+    return prisma.usuario.update({
+      where: { correo },
+      data: { codigoReset: codigo, codigoResetExpira: expira },
+    });
+  },
+
+  async clearResetCode(id) {
+    return prisma.usuario.update({
+      where: { id },
+      data: { codigoReset: null, codigoResetExpira: null },
+    });
+  },
+
+  async updatePassword(id, hashedPassword) {
+    return prisma.usuario.update({
+      where: { id },
+      data: { contrasena: hashedPassword },
+    });
+  },
 };
 
 module.exports = userRepository;

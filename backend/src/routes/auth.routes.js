@@ -30,6 +30,48 @@ const registerValidations = [
     .withMessage('El telefono solo debe contener digitos'),
 ];
 
+const loginValidations = [
+  body('correo')
+    .notEmpty()
+    .withMessage('El correo es obligatorio')
+    .isEmail()
+    .withMessage('El correo no es valido'),
+  body('contrasena')
+    .notEmpty()
+    .withMessage('La contrasena es obligatoria'),
+];
+
+const forgotPasswordValidations = [
+  body('correo')
+    .notEmpty()
+    .withMessage('El correo es obligatorio')
+    .isEmail()
+    .withMessage('El correo no es valido'),
+];
+
+const resetPasswordValidations = [
+  body('correo')
+    .notEmpty()
+    .withMessage('El correo es obligatorio')
+    .isEmail()
+    .withMessage('El correo no es valido'),
+  body('codigo')
+    .notEmpty()
+    .withMessage('El codigo es obligatorio')
+    .isLength({ min: 6, max: 6 })
+    .withMessage('El codigo debe tener 6 digitos')
+    .matches(/^\d{6}$/)
+    .withMessage('El codigo solo debe contener digitos'),
+  body('nuevaContrasena')
+    .notEmpty()
+    .withMessage('La nueva contrasena es obligatoria')
+    .isLength({ min: 8 })
+    .withMessage('La contrasena debe tener minimo 8 caracteres'),
+];
+
 router.post('/register', registerValidations, validateRequest, authController.register);
+router.post('/login', loginValidations, validateRequest, authController.login);
+router.post('/forgot-password', forgotPasswordValidations, validateRequest, authController.forgotPassword);
+router.post('/reset-password', resetPasswordValidations, validateRequest, authController.resetPassword);
 
 module.exports = router;

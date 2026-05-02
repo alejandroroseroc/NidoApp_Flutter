@@ -41,8 +41,10 @@ model Usuario {
   telefono        String?
   fotoPerfil      String?
   modoActivo      ModoActivo    @default(INVITADO)
-  contrasena      String
-  fechaRegistro   DateTime      @default(now())
+  contrasena           String
+  fechaRegistro        DateTime      @default(now())
+  codigoReset          String?
+  codigoResetExpira    DateTime?
   perfilConvivencia PerfilConvivencia?
   alojamientos    Alojamiento[]
   reservas        Reserva[]

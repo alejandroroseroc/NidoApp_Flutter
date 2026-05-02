@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/token_storage_service.dart';
 import '../../domain/entities/usuario.dart';
-import '../../domain/usecases/register_usecase.dart';
+import '../../domain/usecases/login_usecase.dart';
 
-// Estado de UI para controlar flujo de registro.
-class RegisterState {
-  const RegisterState({
+// Estado de UI para controlar flujo de login.
+class LoginState {
+  const LoginState({
     this.isLoading = false,
     this.errorMessage,
     this.isSuccess = false,
@@ -19,14 +19,14 @@ class RegisterState {
   final bool isSuccess;
   final Usuario? usuario;
 
-  RegisterState copyWith({
+  LoginState copyWith({
     bool? isLoading,
     String? errorMessage,
     bool clearError = false,
     bool? isSuccess,
     Usuario? usuario,
   }) {
-    return RegisterState(
+    return LoginState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       isSuccess: isSuccess ?? this.isSuccess,
@@ -35,28 +35,21 @@ class RegisterState {
   }
 }
 
-class RegisterNotifier extends StateNotifier<RegisterState> {
-  RegisterNotifier(this._registerUseCase, this._tokenStorage)
-      : super(const RegisterState());
+class LoginNotifier extends StateNotifier<LoginState> {
+  LoginNotifier(this._loginUseCase, this._tokenStorage)
+      : super(const LoginState());
 
-  final RegisterUseCase _registerUseCase;
+  final LoginUseCase _loginUseCase;
   final TokenStorageService _tokenStorage;
 
-  Future<void> register({
-    required String nombre,
+  Future<void> login({
     required String correo,
     required String contrasena,
-    required String telefono,
   }) async {
     state = state.copyWith(isLoading: true, isSuccess: false, clearError: true);
 
-    final result = await _registerUseCase(
-      RegisterParams(
-        nombre: nombre,
-        correo: correo,
-        contrasena: contrasena,
-        telefono: telefono,
-      ),
+    final result = await _loginUseCase(
+      LoginParams(correo: correo, contrasena: contrasena),
     );
 
     result.fold(
@@ -86,6 +79,6 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
   }
 }
 
-final registerProvider = StateNotifierProvider<RegisterNotifier, RegisterState>(
-  (ref) => sl<RegisterNotifier>(),
+final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>(
+  (ref) => sl<LoginNotifier>(),
 );

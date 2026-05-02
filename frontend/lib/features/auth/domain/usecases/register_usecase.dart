@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/errors/failures.dart';
-import '../entities/usuario.dart';
 import '../repositories/auth_repository.dart';
 
 // Ejecuta el registro de usuario en la capa de dominio.
@@ -11,7 +10,7 @@ class RegisterUseCase {
 
   final AuthRepository repository;
 
-  Future<Either<Failure, Usuario>> call(RegisterParams params) {
+  Future<Either<Failure, Map<String, dynamic>>> call(RegisterParams params) {
     return repository.register(
       nombre: params.nombre,
       correo: params.correo,

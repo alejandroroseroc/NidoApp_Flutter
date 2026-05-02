@@ -36,14 +36,8 @@ class RegisterPage extends ConsumerWidget {
       }
 
       if (next.isSuccess && previous?.isSuccess != true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: AppColors.success,
-            content: Text('Registro exitoso. Ahora puedes iniciar sesion.'),
-          ),
-        );
         ref.read(registerProvider.notifier).clearStatus();
-        Navigator.of(context).maybePop();
+        Navigator.of(context).pushReplacementNamed('/home');
       }
     });
 

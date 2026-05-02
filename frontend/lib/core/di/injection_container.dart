@@ -1,12 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/forgot_password_usecase.dart';
+import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
+import '../../features/auth/domain/usecases/reset_password_usecase.dart';
+import '../../features/auth/presentation/providers/forgot_password_provider.dart';
+import '../../features/auth/presentation/providers/login_provider.dart';
 import '../../features/auth/presentation/providers/register_provider.dart';
 import '../constants/api_constants.dart';
+import '../services/token_storage_service.dart';
 
 final sl = GetIt.instance;
 
@@ -22,8 +29,24 @@ Future<void> setupDependencies() async {
     ),
   );
 
+  sl.registerLazySingleton<FlutterSecureStorage>(
+    () => const FlutterSecureStorage(),
+  );
+
+  sl.registerLazySingleton<TokenStorageService>(
+    () => TokenStorageService(sl()),
+  );
+
   sl.registerLazySingleton<AuthRemoteDatasource>(() => AuthRemoteDatasourceImpl(sl()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+
   sl.registerFactory(() => RegisterUseCase(sl()));
-  sl.registerFactory(() => RegisterNotifier(sl()));
+  sl.registerFactory(() => RegisterNotifier(sl(), sl()));
+
+  sl.registerFactory(() => LoginUseCase(sl()));
+  sl.registerFactory(() => LoginNotifier(sl(), sl()));
+
+  sl.registerFactory(() => ForgotPasswordUseCase(sl()));
+  sl.registerFactory(() => ResetPasswordUseCase(sl()));
+  sl.registerFactory(() => ForgotPasswordNotifier(sl(), sl()));
 }
