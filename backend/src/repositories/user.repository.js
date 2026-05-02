@@ -46,6 +46,24 @@ const userRepository = {
     });
   },
 
+  async updateProfile(id, data) {
+    return prisma.usuario.update({
+      where: { id },
+      data: {
+        nombre: data.nombre,
+        telefono: data.telefono || null,
+        descripcion: data.descripcion || null,
+      },
+    });
+  },
+
+  async updatePhoto(id, fotoPerfil) {
+    return prisma.usuario.update({
+      where: { id },
+      data: { fotoPerfil },
+    });
+  },
+
   async updateModoActivo(id, modoActivo) {
     return prisma.usuario.update({
       where: { id },

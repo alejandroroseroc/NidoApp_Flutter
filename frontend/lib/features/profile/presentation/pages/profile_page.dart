@@ -8,6 +8,8 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/app_primary_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
+import '../../../auth/domain/entities/usuario.dart';
+import '../../../auth/presentation/providers/active_mode_provider.dart';
 import '../providers/profile_provider.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -28,7 +30,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(profileProvider.notifier).loadProfile());
+    Future.microtask(() {
+      ref.read(activeModeProvider.notifier).loadFromSession();
+      ref.read(profileProvider.notifier).loadProfile();
+    });
   }
 
   @override
@@ -64,6 +69,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     });
 
     final state = ref.watch(profileProvider);
+    final activeModeState = ref.watch(activeModeProvider);
     final usuario = state.usuario;
 
     return Scaffold(
@@ -93,6 +99,47 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 onPressed: state.isSaving ? null : _pickImage,
                                 icon: const Icon(Icons.photo_camera_outlined),
                                 label: const Text('Actualizar foto'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        AppCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Modo activo',
+                                style: AppTextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Alterna entre buscar alojamiento o gestionar tus espacios.',
+                                style: AppTextStyles.small,
+                              ),
+                              const SizedBox(height: 16),
+                              SegmentedButton<ModoActivo>(
+                                segments: const [
+                                  ButtonSegment<ModoActivo>(
+                                    value: ModoActivo.invitado,
+                                    label: Text('Invitado'),
+                                    icon: Icon(Icons.search_outlined),
+                                  ),
+                                  ButtonSegment<ModoActivo>(
+                                    value: ModoActivo.anfitrion,
+                                    label: Text('Anfitrion'),
+                                    icon: Icon(Icons.home_work_outlined),
+                                  ),
+                                ],
+                                selected: {activeModeState.modoActivo},
+                                onSelectionChanged:
+                                    activeModeState.isLoading
+                                        ? null
+                                        : (selection) async {
+                                          await ref
+                                              .read(activeModeProvider.notifier)
+                                              .changeMode(selection.first);
+                                        },
                               ),
                             ],
                           ),

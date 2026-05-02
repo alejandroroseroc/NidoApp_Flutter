@@ -21,6 +21,7 @@ describe('AuthService.registerUser', () => {
       nombre: data.nombre,
       correo: data.correo,
       telefono: data.telefono,
+      descripcion: 'Soy anfitrion en NidoApp',
       modoActivo: 'INVITADO',
       contrasena: data.contrasena,
     }));
@@ -39,6 +40,7 @@ describe('AuthService.registerUser', () => {
         nombre: 'Diego Rosero',
         correo: 'diego@nidoapp.com',
         telefono: '3001234567',
+        descripcion: 'Soy anfitrion en NidoApp',
         modoActivo: 'INVITADO',
       },
     });
