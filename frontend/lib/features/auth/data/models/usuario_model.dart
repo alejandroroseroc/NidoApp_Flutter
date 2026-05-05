@@ -10,6 +10,11 @@ class UsuarioModel extends Usuario {
     super.telefono,
     super.fotoPerfil,
     super.descripcion,
+    super.tieneMascotas,
+    super.esFumador,
+    super.nivelRuido,
+    super.genero,
+    super.otrasPreferencias = const [],
   });
 
   factory UsuarioModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +26,15 @@ class UsuarioModel extends Usuario {
       fotoPerfil: json['fotoPerfil'] as String?,
       descripcion: json['descripcion'] as String?,
       modoActivo: modoActivoFromString(json['modoActivo'] as String?),
+      tieneMascotas: json['tieneMascotas'] as bool?,
+      esFumador: json['esFumador'] as bool?,
+      nivelRuido: json['nivelRuido'] as String?,
+      genero: json['genero'] as String?,
+      otrasPreferencias:
+          (json['otrasPreferencias'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
   }
 
@@ -33,6 +47,11 @@ class UsuarioModel extends Usuario {
       fotoPerfil: usuario.fotoPerfil,
       descripcion: usuario.descripcion,
       modoActivo: usuario.modoActivo,
+      tieneMascotas: usuario.tieneMascotas,
+      esFumador: usuario.esFumador,
+      nivelRuido: usuario.nivelRuido,
+      genero: usuario.genero,
+      otrasPreferencias: usuario.otrasPreferencias,
     );
   }
 
@@ -45,6 +64,11 @@ class UsuarioModel extends Usuario {
       'fotoPerfil': fotoPerfil,
       'descripcion': descripcion,
       'modoActivo': modoActivoToString(modoActivo),
+      'tieneMascotas': tieneMascotas,
+      'esFumador': esFumador,
+      'nivelRuido': nivelRuido,
+      'genero': genero,
+      'otrasPreferencias': otrasPreferencias,
     };
   }
 

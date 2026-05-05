@@ -83,6 +83,11 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     required String nombre,
     required String telefono,
     required String descripcion,
+    bool? tieneMascotas,
+    bool? esFumador,
+    String? nivelRuido,
+    String? genero,
+    List<String>? otrasPreferencias,
   }) async {
     state = state.copyWith(isSaving: true, clearMessages: true);
     try {
@@ -92,6 +97,11 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
           'nombre': nombre,
           'telefono': telefono,
           'descripcion': descripcion,
+          'tieneMascotas': tieneMascotas,
+          'esFumador': esFumador,
+          'nivelRuido': nivelRuido,
+          'genero': genero,
+          'otrasPreferencias': otrasPreferencias,
         },
         options: await _authOptions(),
       );
