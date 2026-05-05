@@ -46,6 +46,14 @@ model Usuario {
   fechaRegistro        DateTime      @default(now())
   codigoReset          String?
   codigoResetExpira    DateTime?
+
+  // Preferencias de convivencia
+  tieneMascotas     Boolean?
+  esFumador         Boolean?
+  nivelRuido        String?
+  genero            String?
+  otrasPreferencias String[]      @default([])
+
   perfilConvivencia PerfilConvivencia?
   alojamientos    Alojamiento[]
   reservas        Reserva[]

@@ -53,6 +53,11 @@ const userRepository = {
         nombre: data.nombre,
         telefono: data.telefono || null,
         descripcion: data.descripcion || null,
+        tieneMascotas: data.tieneMascotas,
+        esFumador: data.esFumador,
+        nivelRuido: data.nivelRuido,
+        genero: data.genero,
+        otrasPreferencias: data.otrasPreferencias,
       },
     });
   },

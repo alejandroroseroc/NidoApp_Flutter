@@ -13,6 +13,7 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.onFieldSubmitted,
     this.inputFormatters,
     this.maxLines = 1,
   });
@@ -26,6 +27,7 @@ class AppTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final int maxLines;
 
@@ -35,13 +37,12 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       maxLines: obscureText ? 1 : maxLines,
-      // Desactiva el autocompletado de iOS en campos de contrasena
-      // para que no muestre el boton [?] del sistema.
       enableSuggestions: !obscureText,
       autocorrect: !obscureText,
       keyboardType: keyboardType,
       validator: validator,
       onChanged: onChanged,
+      onFieldSubmitted: onFieldSubmitted,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         labelText: label,

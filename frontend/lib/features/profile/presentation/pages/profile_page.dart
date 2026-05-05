@@ -8,6 +8,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/app_primary_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
+import '../../../../shared/widgets/app_selection_group.dart';
 import '../../../auth/domain/entities/usuario.dart';
 import '../../../auth/presentation/providers/active_mode_provider.dart';
 import '../providers/profile_provider.dart';
@@ -24,8 +25,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   final _nombreController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _descripcionController = TextEditingController();
+  final _otraPreferenciaController = TextEditingController();
   final _imagePicker = ImagePicker();
   bool _filledForm = false;
+
+  // Preferencias de convivencia
+  bool? _tieneMascotas;
+  bool? _esFumador;
+  String? _nivelRuido;
+  String? _genero;
+  List<String> _otrasPreferencias = [];
 
   @override
   void initState() {
@@ -41,6 +50,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     _nombreController.dispose();
     _telefonoController.dispose();
     _descripcionController.dispose();
+    _otraPreferenciaController.dispose();
     super.dispose();
   }
 
@@ -51,6 +61,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         _nombreController.text = next.usuario!.nombre;
         _telefonoController.text = next.usuario!.telefono ?? '';
         _descripcionController.text = next.usuario!.descripcion ?? '';
+
+        // Cargar preferencias
+        _tieneMascotas = next.usuario!.tieneMascotas;
+        _esFumador = next.usuario!.esFumador;
+        _nivelRuido = next.usuario!.nivelRuido;
+        _genero = next.usuario!.genero;
+        _otrasPreferencias = List.from(next.usuario!.otrasPreferencias);
+
         _filledForm = true;
       }
 
@@ -190,6 +208,190 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           },
                         ),
                         const SizedBox(height: 24),
+                        Text(
+                          'Preferencias de convivencia',
+                          style: AppTextStyles.subtitle,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Cuentanos sobre tus habitos para ayudarte a encontrar el companero ideal.',
+                          style: AppTextStyles.small,
+                        ),
+                        const SizedBox(height: 20),
+                        AppCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              AppSelectionGroup<bool>(
+                                label: '¿Tienes mascotas?',
+                                selectedValue: _tieneMascotas,
+                                options: const [
+                                  AppSelectionOption(
+                                    label: 'Si, tengo mascotas',
+                                    value: true,
+                                    icon: Icons.pets_outlined,
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'No tengo',
+                                    value: false,
+                                    icon: Icons.block_outlined,
+                                  ),
+                                ],
+                                onSelected: (val) {
+                                  setState(() => _tieneMascotas = val);
+                                },
+                              ),
+                              const SizedBox(height: 24),
+                              AppSelectionGroup<bool>(
+                                label: '¿Eres fumador?',
+                                selectedValue: _esFumador,
+                                options: const [
+                                  AppSelectionOption(
+                                    label: 'Si, fumo',
+                                    value: true,
+                                    icon: Icons.smoking_rooms_outlined,
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'No fumo',
+                                    value: false,
+                                    icon: Icons.smoke_free_outlined,
+                                  ),
+                                ],
+                                onSelected: (val) {
+                                  setState(() => _esFumador = val);
+                                },
+                              ),
+                              const SizedBox(height: 24),
+                              AppSelectionGroup<String>(
+                                label: 'Nivel de ruido',
+                                selectedValue: _nivelRuido,
+                                helperText:
+                                    '¿Que tan ruidoso eres en el dia a dia?',
+                                options: const [
+                                  AppSelectionOption(
+                                    label: 'Bajo',
+                                    value: 'bajo',
+                                    icon: Icons.volume_mute_outlined,
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'Medio',
+                                    value: 'medio',
+                                    icon: Icons.volume_down_outlined,
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'Alto',
+                                    value: 'alto',
+                                    icon: Icons.volume_up_outlined,
+                                  ),
+                                ],
+                                onSelected: (val) {
+                                  setState(() => _nivelRuido = val);
+                                },
+                              ),
+                              const SizedBox(height: 24),
+                              AppSelectionGroup<String>(
+                                label: 'Genero',
+                                selectedValue: _genero,
+                                options: const [
+                                  AppSelectionOption(
+                                    label: 'Masculino',
+                                    value: 'masculino',
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'Femenino',
+                                    value: 'femenino',
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'Otro',
+                                    value: 'otro',
+                                  ),
+                                  AppSelectionOption(
+                                    label: 'Prefiero no decir',
+                                    value: 'no_decir',
+                                  ),
+                                ],
+                                onSelected: (val) {
+                                  setState(() => _genero = val);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        AppCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                'Otras preferencias',
+                                style: AppTextStyles.body.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Agrega cualquier otro detalle (ej. vegetariano, deportista, etc.)',
+                                style: AppTextStyles.small,
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: AppTextField(
+                                      label: 'Nueva preferencia',
+                                      controller: _otraPreferenciaController,
+                                      hintText: 'Ej. Vegano',
+                                      onFieldSubmitted: (_) => _addPreference(),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  IconButton.filled(
+                                    onPressed: _addPreference,
+                                    icon: const Icon(Icons.add),
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: AppColors.primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if (_otrasPreferencias.isNotEmpty) ...[
+                                const SizedBox(height: 16),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children:
+                                      _otrasPreferencias.map((pref) {
+                                        return Chip(
+                                          label: Text(pref),
+                                          deleteIcon: const Icon(
+                                            Icons.close,
+                                            size: 16,
+                                          ),
+                                          onDeleted:
+                                              () => _removePreference(pref),
+                                          backgroundColor:
+                                              AppColors.badgeBackground,
+                                          labelStyle:
+                                              AppTextStyles.small.copyWith(
+                                                color: AppColors.primary,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                          side: BorderSide.none,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        );
+                                      }).toList(),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 32),
                         AppPrimaryButton(
                           text: 'Guardar cambios',
                           isLoading: state.isSaving,
@@ -221,7 +423,31 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           nombre: _nombreController.text.trim(),
           telefono: _telefonoController.text.trim(),
           descripcion: _descripcionController.text.trim(),
+          tieneMascotas: _tieneMascotas,
+          esFumador: _esFumador,
+          nivelRuido: _nivelRuido,
+          genero: _genero,
+          otrasPreferencias: _otrasPreferencias,
         );
+  }
+
+  void _addPreference() {
+    final text = _otraPreferenciaController.text.trim();
+    if (text.isEmpty) return;
+    if (_otrasPreferencias.contains(text)) {
+      _otraPreferenciaController.clear();
+      return;
+    }
+    setState(() {
+      _otrasPreferencias.add(text);
+      _otraPreferenciaController.clear();
+    });
+  }
+
+  void _removePreference(String text) {
+    setState(() {
+      _otrasPreferencias.remove(text);
+    });
   }
 }
 

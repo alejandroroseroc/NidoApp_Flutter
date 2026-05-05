@@ -23,6 +23,11 @@ const userService = {
       nombre: data.nombre,
       telefono: data.telefono,
       descripcion: data.descripcion,
+      tieneMascotas: data.tieneMascotas,
+      esFumador: data.esFumador,
+      nivelRuido: data.nivelRuido,
+      genero: data.genero,
+      otrasPreferencias: data.otrasPreferencias,
     });
 
     return sanitizeUser(usuario);

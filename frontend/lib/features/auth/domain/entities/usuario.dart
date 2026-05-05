@@ -12,6 +12,11 @@ class Usuario extends Equatable {
     this.telefono,
     this.fotoPerfil,
     this.descripcion,
+    this.tieneMascotas,
+    this.esFumador,
+    this.nivelRuido,
+    this.genero,
+    this.otrasPreferencias = const [],
   });
 
   final String id;
@@ -22,6 +27,13 @@ class Usuario extends Equatable {
   final String? descripcion;
   final ModoActivo modoActivo;
 
+  // Preferencias de convivencia
+  final bool? tieneMascotas;
+  final bool? esFumador;
+  final String? nivelRuido;
+  final String? genero;
+  final List<String> otrasPreferencias;
+
   @override
   List<Object?> get props => [
     id,
@@ -31,5 +43,10 @@ class Usuario extends Equatable {
     fotoPerfil,
     descripcion,
     modoActivo,
+    tieneMascotas,
+    esFumador,
+    nivelRuido,
+    genero,
+    otrasPreferencias,
   ];
 }

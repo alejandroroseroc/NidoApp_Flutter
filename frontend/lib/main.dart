@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'NidoApp',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routes: {
         '/style-guide': (_) => const StyleGuidePage(),
