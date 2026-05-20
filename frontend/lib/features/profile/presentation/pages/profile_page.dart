@@ -374,15 +374,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               () => _removePreference(pref),
                                           backgroundColor:
                                               AppColors.badgeBackground,
-                                          labelStyle:
-                                              AppTextStyles.small.copyWith(
+                                          labelStyle: AppTextStyles.small
+                                              .copyWith(
                                                 color: AppColors.primary,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                           side: BorderSide.none,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                           ),
                                         );
                                       }).toList(),

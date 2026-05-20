@@ -14,6 +14,9 @@ import '../../features/auth/presentation/providers/active_mode_provider.dart';
 import '../../features/auth/presentation/providers/forgot_password_provider.dart';
 import '../../features/auth/presentation/providers/login_provider.dart';
 import '../../features/auth/presentation/providers/register_provider.dart';
+import '../../features/alojamientos/data/datasources/alojamiento_remote_datasource.dart';
+import '../../features/alojamientos/data/repositories/alojamiento_repository_impl.dart';
+import '../../features/alojamientos/domain/repositories/alojamiento_repository.dart';
 import '../constants/api_constants.dart';
 import '../services/token_storage_service.dart';
 
@@ -56,4 +59,11 @@ Future<void> setupDependencies() async {
 
   sl.registerFactory(() => UpdateActiveModeUseCase(sl()));
   sl.registerFactory(() => ActiveModeNotifier(sl(), sl()));
+
+  sl.registerLazySingleton<AlojamientoRemoteDatasource>(
+    () => AlojamientoRemoteDatasourceImpl(sl(), sl()),
+  );
+  sl.registerLazySingleton<AlojamientoRepository>(
+    () => AlojamientoRepositoryImpl(sl()),
+  );
 }

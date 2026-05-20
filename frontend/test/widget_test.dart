@@ -29,5 +29,7 @@ void main() {
 
     expect(find.text('Modo anfitrion'), findsOneWidget);
     expect(find.textContaining('Administra tus alojamientos'), findsOneWidget);
+    expect(find.text('Crear alojamiento'), findsOneWidget);
+    expect(find.text('Mis publicaciones'), findsOneWidget);
   });
 }
