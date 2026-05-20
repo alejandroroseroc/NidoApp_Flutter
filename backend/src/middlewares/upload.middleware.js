@@ -40,4 +40,43 @@ function handleUploadError(error, _req, res, next) {
   });
 }
 
-module.exports = { handleUploadError, profilePhotoUpload };
+const alojamientoUploadDir = path.join(__dirname, '..', '..', 'uploads', 'alojamientos');
+fs.mkdirSync(alojamientoUploadDir, { recursive: true });
+
+const alojamientoStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, alojamientoUploadDir),
+  filename: (req, file, cb) => {
+    const extension = path.extname(file.originalname).toLowerCase();
+    cb(null, `${req.user.id}-${Date.now()}-${Math.round(Math.random() * 1e6)}${extension}`);
+  },
+});
+
+const alojamientoPhotoUpload = multer({
+  storage: alojamientoStorage,
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      return cb(new Error('La imagen debe ser JPG, PNG o WEBP'));
+    }
+    return cb(null, true);
+  },
+});
+
+function optionalAlojamientoPhotos(req, res, next) {
+  const contentType = req.headers['content-type'] || '';
+  if (!contentType.includes('multipart/form-data')) {
+    return next();
+  }
+
+  return alojamientoPhotoUpload.array('fotografias', 10)(req, res, (error) => {
+    if (error) return handleUploadError(error, req, res, next);
+    return next();
+  });
+}
+
+module.exports = {
+  handleUploadError,
+  profilePhotoUpload,
+  alojamientoPhotoUpload,
+  optionalAlojamientoPhotos,
+};

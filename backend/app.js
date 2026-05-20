@@ -21,6 +21,7 @@ app.get('/health', (req, res) => {
 // Registra las rutas de autenticacion.
 app.use('/api/auth', require('./src/routes/auth.routes'));
 app.use('/api/users', require('./src/routes/user.routes'));
+app.use('/api/alojamientos', require('./src/routes/alojamiento.routes'));
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

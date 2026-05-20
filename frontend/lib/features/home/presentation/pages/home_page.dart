@@ -5,6 +5,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/token_storage_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/widgets/app_primary_button.dart';
 import '../../../auth/domain/entities/usuario.dart';
 import '../../../auth/presentation/providers/active_mode_provider.dart';
 
@@ -148,6 +149,22 @@ class ActiveModeContent extends StatelessWidget {
             style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
+          if (isHost) ...[
+            const SizedBox(height: 32),
+            AppPrimaryButton(
+              text: 'Crear alojamiento',
+              onPressed: () {
+                Navigator.of(context).pushNamed('/crear-alojamiento');
+              },
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/mis-publicaciones');
+              },
+              child: const Text('Mis publicaciones'),
+            ),
+          ],
         ],
       ),
     );

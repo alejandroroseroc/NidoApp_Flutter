@@ -44,24 +44,22 @@ class AppSelectionGroup<T> extends StatelessWidget {
         ),
         if (helperText != null) ...[
           const SizedBox(height: 4),
-          Text(
-            helperText!,
-            style: AppTextStyles.small,
-          ),
+          Text(helperText!, style: AppTextStyles.small),
         ],
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: options.map((option) {
-            final isSelected = option.value == selectedValue;
-            return _SelectionChip(
-              label: option.label,
-              icon: option.icon,
-              isSelected: isSelected,
-              onTap: () => onSelected(option.value),
-            );
-          }).toList(),
+          children:
+              options.map((option) {
+                final isSelected = option.value == selectedValue;
+                return _SelectionChip(
+                  label: option.label,
+                  icon: option.icon,
+                  isSelected: isSelected,
+                  onTap: () => onSelected(option.value),
+                );
+              }).toList(),
         ),
       ],
     );
@@ -96,15 +94,16 @@ class _SelectionChip extends StatelessWidget {
             color: isSelected ? AppColors.primary : AppColors.border,
             width: 1.5,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
+          boxShadow:
+              isSelected
+                  ? [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                  : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
