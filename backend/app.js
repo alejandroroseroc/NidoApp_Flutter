@@ -22,6 +22,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', require('./src/routes/auth.routes'));
 app.use('/api/users', require('./src/routes/user.routes'));
 app.use('/api/alojamientos', require('./src/routes/alojamiento.routes'));
+app.use('/api/reservas', require('./src/routes/reserva.routes'));
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

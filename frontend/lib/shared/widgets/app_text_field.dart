@@ -16,6 +16,8 @@ class AppTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.inputFormatters,
     this.maxLines = 1,
+    this.readOnly = false,
+    this.onTap,
   });
 
   final String label;
@@ -30,6 +32,8 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final int maxLines;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,8 @@ class AppTextField extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
+      readOnly: readOnly,
+      onTap: onTap,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         labelText: label,

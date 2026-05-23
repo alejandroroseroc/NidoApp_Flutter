@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/widgets/app_primary_button.dart';
 import '../../../auth/domain/entities/usuario.dart';
 import '../../../auth/presentation/providers/anfitrion_provider.dart';
 import '../../domain/entities/alojamiento.dart';
@@ -229,6 +230,14 @@ class _DetalleAlojamientoPageState
                     ),
                   ),
 
+                  const SizedBox(height: 16),
+                  AppPrimaryButton(
+                    text: 'Solicitar reserva',
+                    onPressed: () => Navigator.of(context).pushNamed(
+                      '/solicitar-reserva',
+                      arguments: alojamiento,
+                    ),
+                  ),
                   const SizedBox(height: 32),
                 ],
               ),
