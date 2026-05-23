@@ -10,6 +10,7 @@ import '../../../../shared/widgets/app_selection_group.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../../domain/entities/alojamiento.dart';
 import 'alojamiento_constants.dart';
+import 'ciudad_selector.dart';
 
 class AlojamientoForm extends StatelessWidget {
   const AlojamientoForm({
@@ -19,7 +20,11 @@ class AlojamientoForm extends StatelessWidget {
     required this.descripcionController,
     required this.reglasController,
     required this.precioController,
-    required this.ubicacionController,
+    // Ubicación estructurada: ciudad + barrio/dirección opcional
+    required this.ciudad,
+    required this.onCiudadChanged,
+    required this.barrioController,
+    this.ciudadError,
     required this.tipoEspacio,
     required this.tipoPrivacidad,
     required this.tipoAcceso,
@@ -40,7 +45,10 @@ class AlojamientoForm extends StatelessWidget {
   final TextEditingController descripcionController;
   final TextEditingController reglasController;
   final TextEditingController precioController;
-  final TextEditingController ubicacionController;
+  final String? ciudad;
+  final ValueChanged<String> onCiudadChanged;
+  final TextEditingController barrioController;
+  final String? ciudadError;
   final TipoEspacio? tipoEspacio;
   final TipoPrivacidad? tipoPrivacidad;
   final String? tipoAcceso;
@@ -194,15 +202,18 @@ class AlojamientoForm extends StatelessWidget {
             },
           ),
           const SizedBox(height: 16),
+
+          // ── Ubicación estructurada ────────────────────────────────────
+          CiudadSelector(
+            initialValue: ciudad,
+            onCiudadSelected: onCiudadChanged,
+            errorText: ciudadError,
+          ),
+          const SizedBox(height: 12),
           AppTextField(
-            label: 'Ubicacion',
-            controller: ubicacionController,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'La ubicacion es obligatoria';
-              }
-              return null;
-            },
+            label: 'Barrio / Dirección adicional',
+            controller: barrioController,
+            hintText: 'Ej: Chapinero, Calle 123 # 45-67 (opcional)',
           ),
           const SizedBox(height: 16),
           Row(

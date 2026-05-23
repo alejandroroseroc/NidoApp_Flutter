@@ -9,6 +9,9 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/alojamientos/presentation/pages/crear_alojamiento_page.dart';
 import 'features/alojamientos/presentation/pages/editar_alojamiento_page.dart';
+import 'features/alojamientos/domain/entities/alojamiento.dart';
+import 'features/alojamientos/presentation/pages/detalle_alojamiento_page.dart';
+import 'features/alojamientos/presentation/pages/explorar_alojamientos_page.dart';
 import 'features/alojamientos/presentation/pages/mis_publicaciones_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/profile/presentation/pages/profile_page.dart';
@@ -36,6 +39,12 @@ class MyApp extends StatelessWidget {
         '/forgot-password': (_) => ForgotPasswordPage(),
         '/home': (_) => const HomePage(),
         '/profile': (_) => const ProfilePage(),
+        '/explorar': (_) => const ExplorarAlojamientosPage(),
+        '/detalle-alojamiento': (context) {
+          final alojamiento =
+              ModalRoute.of(context)!.settings.arguments as Alojamiento;
+          return DetalleAlojamientoPage(alojamiento: alojamiento);
+        },
         '/mis-publicaciones': (_) => const MisPublicacionesPage(),
         '/crear-alojamiento': (_) => const CrearAlojamientoPage(),
         '/editar-alojamiento': (context) {

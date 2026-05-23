@@ -4,6 +4,17 @@ const alojamientoInclude = {
   servicios: true,
 };
 
+const alojamientoIncludeConAnfitrion = {
+  servicios: true,
+  anfitrion: {
+    select: {
+      id: true,
+      nombre: true,
+      fotoPerfil: true,
+    },
+  },
+};
+
 const alojamientoRepository = {
   async create(data) {
     return prisma.alojamiento.create({
@@ -26,6 +37,48 @@ const alojamientoRepository = {
           : undefined,
       },
       include: alojamientoInclude,
+    });
+  },
+
+  async findDisponibles({ page = 1, limit = 20, filters = {} } = {}) {
+    const skip = (page - 1) * limit;
+
+    const where = { estado: 'ACTIVO' };
+
+    if (filters.tipoEspacio) {
+      where.tipoEspacio = filters.tipoEspacio;
+    }
+
+    if (filters.precioMin != null || filters.precioMax != null) {
+      where.precio = {};
+      if (filters.precioMin != null) where.precio.gte = filters.precioMin;
+      if (filters.precioMax != null) where.precio.lte = filters.precioMax;
+    }
+
+    if (filters.ubicacion) {
+      where.ubicacion = { contains: filters.ubicacion, mode: 'insensitive' };
+    }
+
+    if (filters.servicios && filters.servicios.length > 0) {
+      // Debe tener TODOS los servicios solicitados
+      where.AND = filters.servicios.map((nombre) => ({
+        servicios: { some: { nombre } },
+      }));
+    }
+
+    return prisma.alojamiento.findMany({
+      where,
+      include: alojamientoIncludeConAnfitrion,
+      orderBy: { creadoEn: 'desc' },
+      skip,
+      take: limit,
+    });
+  },
+
+  async findByIdPublico(id) {
+    return prisma.alojamiento.findUnique({
+      where: { id },
+      include: alojamientoIncludeConAnfitrion,
     });
   },
 

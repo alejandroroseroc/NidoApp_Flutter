@@ -1,6 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../../domain/entities/alojamiento.dart';
+import '../../domain/entities/filtros_alojamiento.dart';
 import '../../domain/repositories/alojamiento_repository.dart';
 import '../datasources/alojamiento_remote_datasource.dart';
 import '../models/alojamiento_model.dart';
@@ -42,6 +43,15 @@ class AlojamientoRepositoryImpl implements AlojamientoRepository {
   @override
   Future<List<Alojamiento>> getMisPublicaciones() {
     return remoteDatasource.getMisPublicaciones();
+  }
+
+  @override
+  Future<List<Alojamiento>> getAlojamientosDisponibles({
+    FiltrosAlojamiento? filtros,
+  }) {
+    return remoteDatasource.getAlojamientosDisponibles(
+      queryParams: filtros?.toQueryParams() ?? {},
+    );
   }
 
   @override

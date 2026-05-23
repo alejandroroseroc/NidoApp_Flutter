@@ -22,6 +22,16 @@ const userController = {
     }
   },
 
+  // HU-12: perfil público del anfitrión
+  async getById(req, res, next) {
+    try {
+      const usuario = await userService.getPublicProfile(req.params.id);
+      res.status(200).json({ data: { usuario } });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async uploadPhoto(req, res, next) {
     try {
       if (!req.file) {

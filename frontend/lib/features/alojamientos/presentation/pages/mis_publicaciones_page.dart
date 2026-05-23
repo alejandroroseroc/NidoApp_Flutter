@@ -32,6 +32,41 @@ class _MisPublicacionesPageState extends ConsumerState<MisPublicacionesPage> {
     await ref.read(alojamientoProvider.notifier).loadMisPublicaciones();
   }
 
+  Future<void> _confirmToggleEstado(Alojamiento alojamiento) async {
+    final desactivar = alojamiento.isActivo;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(desactivar ? 'Desactivar publicacion' : 'Activar publicacion'),
+            content: Text(
+              desactivar
+                  ? '¿Deseas desactivar "${alojamiento.titulo}"? No aparecerá en los resultados de búsqueda mientras esté inactiva.'
+                  : '¿Deseas activar "${alojamiento.titulo}"? Volverá a aparecer en los resultados de búsqueda.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(
+                  desactivar ? 'Desactivar' : 'Activar',
+                  style: TextStyle(
+                    color: desactivar ? AppColors.error : AppColors.success,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+
+    if (confirmed == true) {
+      await ref.read(alojamientoProvider.notifier).toggleEstado(alojamiento.id);
+    }
+  }
+
   Future<void> _confirmDelete(Alojamiento alojamiento) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -157,10 +192,7 @@ class _MisPublicacionesPageState extends ConsumerState<MisPublicacionesPage> {
                         ).pushNamed('/editar-alojamiento', arguments: item.id);
                         if (updated == true) _reload();
                       },
-                      onToggleEstado:
-                          () => ref
-                              .read(alojamientoProvider.notifier)
-                              .toggleEstado(item.id),
+                      onToggleEstado: () => _confirmToggleEstado(item),
                       onDelete: () => _confirmDelete(item),
                     );
                   },
@@ -190,6 +222,7 @@ class _PublicacionCard extends StatelessWidget {
     final foto = alojamiento.fotoPrincipal;
 
     return AppCard(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -251,32 +284,81 @@ class _PublicacionCard extends StatelessWidget {
             style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
-          Row(
+          const Divider(height: 1, thickness: 1, color: AppColors.border),
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(16),
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  _ActionButton(
+                    icon: Icons.edit_outlined,
+                    label: 'Editar',
+                    onTap: onEdit,
+                  ),
+                  const VerticalDivider(width: 1, thickness: 1, color: AppColors.border),
+                  _ActionButton(
+                    icon: alojamiento.isActivo
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    label: alojamiento.isActivo ? 'Desactivar' : 'Activar',
+                    onTap: onToggleEstado,
+                  ),
+                  const VerticalDivider(width: 1, thickness: 1, color: AppColors.border),
+                  _ActionButton(
+                    icon: Icons.delete_outline,
+                    label: 'Eliminar',
+                    color: AppColors.error,
+                    onTap: onDelete,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveColor = color ?? AppColors.primary;
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextButton.icon(
-                onPressed: onEdit,
-                icon: const Icon(Icons.edit_outlined, size: 18),
-                label: const Text('Editar'),
-              ),
-              TextButton.icon(
-                onPressed: onToggleEstado,
-                icon: Icon(
-                  alojamiento.isActivo
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  size: 18,
+              Icon(icon, size: 18, color: effectiveColor),
+              const SizedBox(height: 3),
+              Text(
+                label,
+                style: AppTextStyles.small.copyWith(
+                  color: effectiveColor,
+                  fontWeight: FontWeight.w600,
                 ),
-                label: Text(alojamiento.isActivo ? 'Desactivar' : 'Activar'),
-              ),
-              TextButton.icon(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline, size: 18),
-                label: const Text('Eliminar'),
-                style: TextButton.styleFrom(foregroundColor: AppColors.error),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

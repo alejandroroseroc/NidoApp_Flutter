@@ -38,4 +38,7 @@ router.post(
   userController.uploadPhoto,
 );
 
+// HU-12: perfil público del anfitrión — debe ir DESPUÉS de /me para no colisionar
+router.get('/:id', requireAuth, userController.getById);
+
 module.exports = router;

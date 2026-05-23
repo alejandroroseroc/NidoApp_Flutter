@@ -5,6 +5,20 @@ function sanitizeUser(usuario) {
   return safeUser;
 }
 
+// Perfil público del anfitrión para invitados autenticados.
+// El endpoint ya requiere JWT, así que exponer correo es aceptable para facilitar contacto.
+function sanitizePublicProfile(usuario) {
+  return {
+    id: usuario.id,
+    nombre: usuario.nombre,
+    correo: usuario.correo,
+    fotoPerfil: usuario.fotoPerfil || null,
+    descripcion: usuario.descripcion || null,
+    telefono: usuario.telefono || null,
+    modoActivo: usuario.modoActivo,
+  };
+}
+
 const userService = {
   async getMe(usuarioId) {
     const usuario = await userRepository.findById(usuarioId);
@@ -36,6 +50,19 @@ const userService = {
   async updatePhoto(usuarioId, fotoPerfil) {
     const usuario = await userRepository.updatePhoto(usuarioId, fotoPerfil);
     return sanitizeUser(usuario);
+  },
+
+  // HU-12: perfil público de un anfitrión para invitados
+  async getPublicProfile(id) {
+    const usuario = await userRepository.findById(id);
+
+    if (!usuario) {
+      const error = new Error('Usuario no encontrado');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return sanitizePublicProfile(usuario);
   },
 };
 

@@ -8,6 +8,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/app_primary_button.dart';
 import '../../../auth/domain/entities/usuario.dart';
 import '../../../auth/presentation/providers/active_mode_provider.dart';
+import '../../../alojamientos/presentation/pages/explorar_alojamientos_page.dart';
 
 // Pantalla principal — placeholder hasta implementar el home real.
 class HomePage extends ConsumerWidget {
@@ -163,6 +164,18 @@ class ActiveModeContent extends StatelessWidget {
                 Navigator.of(context).pushNamed('/mis-publicaciones');
               },
               child: const Text('Mis publicaciones'),
+            ),
+          ] else ...[
+            const SizedBox(height: 32),
+            AppPrimaryButton(
+              text: 'Explorar alojamientos',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ExplorarAlojamientosPage(),
+                  ),
+                );
+              },
             ),
           ],
         ],

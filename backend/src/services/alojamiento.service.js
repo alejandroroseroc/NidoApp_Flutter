@@ -29,7 +29,7 @@ function parseServicios(value) {
 function formatAlojamiento(alojamiento) {
   if (!alojamiento) return null;
 
-  const { servicios, precio, creadoEn, ...rest } = alojamiento;
+  const { servicios, precio, creadoEn, anfitrion, ...rest } = alojamiento;
 
   return {
     ...rest,
@@ -38,6 +38,7 @@ function formatAlojamiento(alojamiento) {
     servicios: (servicios || []).map((servicio) => servicio.nombre),
     createdAt: creadoEn,
     updatedAt: creadoEn,
+    ...(anfitrion ? { anfitrion } : {}),
   };
 }
 
@@ -134,6 +135,23 @@ function assertOwner(alojamiento, usuarioId) {
 }
 
 const alojamientoService = {
+  async listDisponibles({ page, limit, filters } = {}) {
+    const alojamientos = await alojamientoRepository.findDisponibles({ page, limit, filters });
+    return alojamientos.map(formatAlojamiento);
+  },
+
+  async getByIdParaInvitado(id) {
+    const alojamiento = await alojamientoRepository.findByIdPublico(id);
+
+    if (!alojamiento || alojamiento.estado !== 'ACTIVO') {
+      const error = new Error('Publicacion no encontrada');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return formatAlojamiento(alojamiento);
+  },
+
   async create(anfitrionId, data) {
     const payload = validatePayload(data);
     const alojamiento = await alojamientoRepository.create({
@@ -191,7 +209,7 @@ const alojamientoService = {
     return formatAlojamiento(updated);
   },
 
-  async updateEstado(id, usuarioId, body) {
+  async updateEstado(id, usuarioId, body = {}) {
     const existing = await alojamientoRepository.findById(id);
     assertOwner(existing, usuarioId);
 

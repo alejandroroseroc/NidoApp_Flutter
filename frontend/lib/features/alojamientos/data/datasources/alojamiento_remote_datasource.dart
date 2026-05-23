@@ -16,6 +16,10 @@ abstract class AlojamientoRemoteDatasource {
 
   Future<List<Alojamiento>> getMisPublicaciones();
 
+  Future<List<Alojamiento>> getAlojamientosDisponibles({
+    Map<String, dynamic> queryParams = const {},
+  });
+
   Future<Alojamiento> getById(String id);
 
   Future<Alojamiento> update({
@@ -124,6 +128,31 @@ class AlojamientoRemoteDatasourceImpl implements AlojamientoRemoteDatasource {
     } on DioException catch (error) {
       throw ServerException(
         _extractError(error, 'No se pudieron cargar tus publicaciones'),
+      );
+    }
+  }
+
+  @override
+  Future<List<Alojamiento>> getAlojamientosDisponibles({
+    Map<String, dynamic> queryParams = const {},
+  }) async {
+    try {
+      final response = await dio.get(
+        '/api/alojamientos',
+        queryParameters: queryParams.isEmpty ? null : queryParams,
+        options: await _authOptions(),
+      );
+      final payload = response.data as Map<String, dynamic>;
+      final data = payload['data'] as Map<String, dynamic>;
+      final list = data['alojamientos'] as List<dynamic>;
+      return list
+          .map(
+            (item) => AlojamientoModel.fromJson(item as Map<String, dynamic>),
+          )
+          .toList();
+    } on DioException catch (error) {
+      throw ServerException(
+        _extractError(error, 'No se pudieron cargar los alojamientos'),
       );
     }
   }

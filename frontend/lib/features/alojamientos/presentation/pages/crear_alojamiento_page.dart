@@ -22,12 +22,14 @@ class _CrearAlojamientoPageState extends ConsumerState<CrearAlojamientoPage> {
   final _descripcionController = TextEditingController();
   final _reglasController = TextEditingController();
   final _precioController = TextEditingController();
-  final _ubicacionController = TextEditingController();
+  final _barrioController = TextEditingController();
   final _imagePicker = ImagePicker();
 
   TipoEspacio? _tipoEspacio;
   TipoPrivacidad? _tipoPrivacidad;
   String? _tipoAcceso;
+  String? _ciudad;
+  String? _ciudadError;
   final Set<String> _servicios = {};
   final List<XFile> _fotos = [];
 
@@ -37,7 +39,7 @@ class _CrearAlojamientoPageState extends ConsumerState<CrearAlojamientoPage> {
     _descripcionController.dispose();
     _reglasController.dispose();
     _precioController.dispose();
-    _ubicacionController.dispose();
+    _barrioController.dispose();
     super.dispose();
   }
 
@@ -50,6 +52,12 @@ class _CrearAlojamientoPageState extends ConsumerState<CrearAlojamientoPage> {
   }
 
   Future<void> _submit() async {
+    // Validate ciudad
+    if (_ciudad == null || _ciudad!.trim().isEmpty) {
+      setState(() => _ciudadError = 'La ciudad es obligatoria');
+      return;
+    }
+
     if (_tipoEspacio == null ||
         _tipoPrivacidad == null ||
         _tipoAcceso == null) {
@@ -58,6 +66,9 @@ class _CrearAlojamientoPageState extends ConsumerState<CrearAlojamientoPage> {
     }
 
     if (!_formKey.currentState!.validate()) return;
+
+    final barrio = _barrioController.text.trim();
+    final ubicacion = barrio.isNotEmpty ? '${_ciudad!}, $barrio' : _ciudad!;
 
     final success = await ref
         .read(alojamientoProvider.notifier)
@@ -68,7 +79,7 @@ class _CrearAlojamientoPageState extends ConsumerState<CrearAlojamientoPage> {
           tipoPrivacidad: _tipoPrivacidad!,
           tipoAcceso: _tipoAcceso!,
           precioMensual: double.parse(_precioController.text.trim()),
-          ubicacion: _ubicacionController.text.trim(),
+          ubicacion: ubicacion,
           reglas:
               _reglasController.text.trim().isEmpty
                   ? null
@@ -114,7 +125,13 @@ class _CrearAlojamientoPageState extends ConsumerState<CrearAlojamientoPage> {
               descripcionController: _descripcionController,
               reglasController: _reglasController,
               precioController: _precioController,
-              ubicacionController: _ubicacionController,
+              ciudad: _ciudad,
+              onCiudadChanged: (value) => setState(() {
+                _ciudad = value.trim().isEmpty ? null : value;
+                _ciudadError = null;
+              }),
+              barrioController: _barrioController,
+              ciudadError: _ciudadError,
               tipoEspacio: _tipoEspacio,
               tipoPrivacidad: _tipoPrivacidad,
               tipoAcceso: _tipoAcceso,

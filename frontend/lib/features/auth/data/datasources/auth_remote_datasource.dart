@@ -28,6 +28,8 @@ abstract class AuthRemoteDatasource {
   });
 
   Future<Usuario> updateActiveMode({required ModoActivo modoActivo});
+
+  Future<Usuario> getUsuarioById(String id);
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -140,6 +142,27 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
           data is Map<String, dynamic> && data['error'] is String
               ? data['error'] as String
               : 'Error al restablecer la contrasena';
+      throw ServerException(message);
+    }
+  }
+
+  @override
+  Future<Usuario> getUsuarioById(String id) async {
+    try {
+      final token = await tokenStorage.getToken();
+      final response = await dio.get(
+        '/api/users/$id',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      final payload = response.data as Map<String, dynamic>;
+      final data = payload['data'] as Map<String, dynamic>;
+      return UsuarioModel.fromJson(data['usuario'] as Map<String, dynamic>);
+    } on DioException catch (error) {
+      final dynamic data = error.response?.data;
+      final message =
+          data is Map<String, dynamic> && data['error'] is String
+              ? data['error'] as String
+              : 'No se pudo cargar el perfil del anfitrion';
       throw ServerException(message);
     }
   }

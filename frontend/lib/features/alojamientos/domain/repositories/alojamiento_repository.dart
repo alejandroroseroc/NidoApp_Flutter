@@ -1,6 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../entities/alojamiento.dart';
+import '../entities/filtros_alojamiento.dart';
 
 abstract class AlojamientoRepository {
   Future<Alojamiento> createAlojamiento({
@@ -17,6 +18,10 @@ abstract class AlojamientoRepository {
   });
 
   Future<List<Alojamiento>> getMisPublicaciones();
+
+  Future<List<Alojamiento>> getAlojamientosDisponibles({
+    FiltrosAlojamiento? filtros,
+  });
 
   Future<Alojamiento> getById(String id);
 

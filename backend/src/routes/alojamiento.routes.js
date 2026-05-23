@@ -9,6 +9,9 @@ const {
 
 const router = express.Router();
 
+// HU-11: listado público de alojamientos activos (invitado)
+router.get('/', requireAuth, alojamientoController.listDisponibles);
+
 router.post(
   '/',
   requireAuth,
@@ -17,8 +20,10 @@ router.post(
   alojamientoController.create,
 );
 
+// HU-11 requiere que mis-publicaciones esté ANTES de /:id para no ser capturada como id
 router.get('/mis-publicaciones', requireAuth, alojamientoController.listMine);
 
+// HU-12: detalle público (invitado ve ACTIVOS; anfitrión ve los suyos en cualquier estado)
 router.get('/:id', requireAuth, alojamientoController.getById);
 
 router.put(
