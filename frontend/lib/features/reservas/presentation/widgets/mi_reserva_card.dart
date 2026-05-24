@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/api_constants.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/reserva_invitado.dart';
 
 class MiReservaCard extends StatelessWidget {
-  const MiReservaCard({super.key, required this.reserva});
+  const MiReservaCard({
+    super.key,
+    required this.reserva,
+    this.onReviewPressed,
+    this.onViewReviewsPressed,
+  });
 
   final ReservaInvitado reserva;
+  final VoidCallback? onReviewPressed;
+  final VoidCallback? onViewReviewsPressed;
 
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
@@ -140,6 +148,28 @@ class MiReservaCard extends StatelessWidget {
                       ],
                     ),
                   ],
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: onReviewPressed,
+                      icon: const Icon(Icons.star_rounded),
+                      label: const Text('Dejar reseña'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton.icon(
+                      onPressed: onViewReviewsPressed,
+                      icon: const Icon(Icons.reviews_outlined),
+                      label: const Text('Ver reseñas del alojamiento'),
+                    ),
+                  ),
                 ],
                 const SizedBox(height: 10),
                 Text(

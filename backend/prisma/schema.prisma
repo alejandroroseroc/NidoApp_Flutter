@@ -120,4 +120,6 @@ model Resena {
   autorId       String
   alojamiento   Alojamiento @relation(fields: [alojamientoId], references: [id])
   alojamientoId String
+
+  @@unique([autorId, alojamientoId])
 }
