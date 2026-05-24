@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../alojamientos/domain/repositories/alojamiento_repository.dart';
 import '../../domain/entities/reserva_invitado.dart';
 import '../providers/mis_reservas_provider.dart';
 import '../widgets/mi_reserva_card.dart';
@@ -125,9 +127,43 @@ class _MisReservasPageState extends ConsumerState<MisReservasPage> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         itemCount: state.reservas.length,
         itemBuilder: (context, index) {
-          return MiReservaCard(reserva: state.reservas[index]);
+          final reserva = state.reservas[index];
+          return MiReservaCard(
+            reserva: reserva,
+            onReviewPressed: () async {
+              final created = await Navigator.of(context).pushNamed(
+                '/crear-resena',
+                arguments: reserva,
+              );
+              if (created == true && mounted) {
+                ref.read(misReservasProvider.notifier).loadReservas();
+              }
+            },
+            onViewReviewsPressed: () => _openAlojamientoReviews(reserva),
+          );
         },
       ),
     );
+  }
+
+  Future<void> _openAlojamientoReviews(ReservaInvitado reserva) async {
+    try {
+      final alojamiento = await sl<AlojamientoRepository>().getById(
+        reserva.alojamientoId,
+      );
+      if (!mounted) return;
+      Navigator.of(context).pushNamed(
+        '/detalle-alojamiento',
+        arguments: alojamiento,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: AppColors.error,
+          content: Text('No se pudo abrir el alojamiento'),
+        ),
+      );
+    }
   }
 }

@@ -1,5 +1,6 @@
 const express = require('express');
 const alojamientoController = require('../controllers/alojamiento.controller');
+const resenaController = require('../controllers/resena.controller');
 const requireAuth = require('../middlewares/auth.middleware');
 const {
   handleUploadError,
@@ -22,6 +23,8 @@ router.post(
 
 // HU-11 requiere que mis-publicaciones esté ANTES de /:id para no ser capturada como id
 router.get('/mis-publicaciones', requireAuth, alojamientoController.listMine);
+router.get('/:id/resenas', requireAuth, resenaController.listByAlojamiento);
+router.post('/:id/resenas', requireAuth, resenaController.createForAlojamiento);
 
 // HU-12: detalle público (invitado ve ACTIVOS; anfitrión ve los suyos en cualquier estado)
 router.get('/:id', requireAuth, alojamientoController.getById);

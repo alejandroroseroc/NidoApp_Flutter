@@ -7,6 +7,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/app_primary_button.dart';
 import '../../../auth/domain/entities/usuario.dart';
 import '../../../auth/presentation/providers/anfitrion_provider.dart';
+import '../../../resenas/presentation/widgets/resenas_section.dart';
 import '../../domain/entities/alojamiento.dart';
 
 class DetalleAlojamientoPage extends ConsumerStatefulWidget {
@@ -227,6 +228,16 @@ class _DetalleAlojamientoPageState
                       data: (usuario) => usuario == null
                           ? const _AnfitrionNoDisponible()
                           : _AnfitrionCard(usuario: usuario),
+                    ),
+                  ),
+
+                  const _Divider(),
+                  _Seccion(
+                    titulo: 'Reseñas',
+                    icon: Icons.star_rounded,
+                    child: ResenasSection(
+                      alojamientoId: alojamiento.id,
+                      titulo: alojamiento.titulo,
                     ),
                   ),
 

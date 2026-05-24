@@ -10,6 +10,7 @@ class ReservaInvitado extends Equatable {
     required this.fechaIngreso,
     required this.duracionDias,
     required this.fechaSolicitud,
+    required this.alojamientoId,
     required this.alojamientoTitulo,
     required this.alojamientoUbicacion,
     this.alojamientoFoto,
@@ -22,6 +23,7 @@ class ReservaInvitado extends Equatable {
   final DateTime fechaIngreso;
   final int duracionDias;
   final DateTime fechaSolicitud;
+  final String alojamientoId;
   final String alojamientoTitulo;
   final String alojamientoUbicacion;
   final String? alojamientoFoto;
@@ -35,6 +37,7 @@ class ReservaInvitado extends Equatable {
     fechaIngreso,
     duracionDias,
     fechaSolicitud,
+    alojamientoId,
     alojamientoTitulo,
     alojamientoUbicacion,
     alojamientoFoto,
