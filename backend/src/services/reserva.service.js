@@ -1,5 +1,6 @@
 const reservaRepository = require('../repositories/reserva.repository');
 const userRepository = require('../repositories/user.repository');
+const emailService = require('./email.service');
 
 function formatReserva(reserva) {
   return {
@@ -196,6 +197,20 @@ const reservaService = {
     }
 
     const updated = await reservaRepository.updateStatus(reservationId, newStatus);
+
+    // Enviar correo de notificación al invitado (sin bloquear la respuesta)
+    emailService.sendReservaStatusUpdate({
+      correoInvitado:    reserva.invitado.correo,
+      nombreInvitado:    reserva.invitado.nombre,
+      tituloAlojamiento: reserva.alojamiento.titulo,
+      ubicacion:         reserva.alojamiento.ubicacion,
+      fechaIngreso:      reserva.fechaIngreso,
+      duracionDias:      reserva.duracionDias,
+      nuevoEstado:       newStatus,
+    }).catch((err) => {
+      console.error('[email] Error al enviar notificación de reserva:', err.message);
+    });
+
     return formatHostReserva(updated);
   },
 };
