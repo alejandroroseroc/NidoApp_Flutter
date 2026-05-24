@@ -24,9 +24,8 @@ class SolicitudReservaPage extends ConsumerStatefulWidget {
 class _SolicitudReservaPageState extends ConsumerState<SolicitudReservaPage> {
   final _formKey = GlobalKey<FormState>();
   final _fechaController = TextEditingController();
-  final _duracionController = TextEditingController(text: '30');
+  final _duracionController = TextEditingController(text: '1');
   DateTime? _fechaIngreso;
-  DuracionUnidad _unidad = DuracionUnidad.dias;
 
   @override
   void dispose() {
@@ -131,9 +130,8 @@ class _SolicitudReservaPageState extends ConsumerState<SolicitudReservaPage> {
                 ),
                 const SizedBox(height: 16),
                 AppTextField(
-                  label: _unidad == DuracionUnidad.dias
-                      ? 'Duracion en dias'
-                      : 'Duracion en meses',
+                  label: 'Duración en días',
+                  hintText: 'Ej: 5 días',
                   controller: _duracionController,
                   keyboardType: TextInputType.number,
                   prefixIcon: const Icon(Icons.timelapse_outlined),
@@ -141,38 +139,10 @@ class _SolicitudReservaPageState extends ConsumerState<SolicitudReservaPage> {
                   validator: (value) {
                     final duration = int.tryParse(value ?? '');
                     if (duration == null) return 'Ingresa la duracion';
-                    if (_unidad == DuracionUnidad.dias &&
-                        (duration < 1 || duration > 730)) {
-                      return 'La duracion debe estar entre 1 y 730 dias';
-                    }
-                    if (_unidad == DuracionUnidad.meses &&
-                        (duration < 1 || duration > 24)) {
-                      return 'La duracion debe estar entre 1 y 24 meses';
+                    if (duration < 1 || duration > 365) {
+                      return 'La duracion debe estar entre 1 y 365 dias';
                     }
                     return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                SegmentedButton<DuracionUnidad>(
-                  segments: const [
-                    ButtonSegment<DuracionUnidad>(
-                      value: DuracionUnidad.dias,
-                      label: Text('Dias'),
-                      icon: Icon(Icons.today_outlined),
-                    ),
-                    ButtonSegment<DuracionUnidad>(
-                      value: DuracionUnidad.meses,
-                      label: Text('Meses'),
-                      icon: Icon(Icons.calendar_month_outlined),
-                    ),
-                  ],
-                  selected: {_unidad},
-                  onSelectionChanged: (selection) {
-                    setState(() {
-                      _unidad = selection.first;
-                      _duracionController.text =
-                          _unidad == DuracionUnidad.dias ? '30' : '1';
-                    });
                   },
                 ),
                 const SizedBox(height: 24),
@@ -211,14 +181,7 @@ class _SolicitudReservaPageState extends ConsumerState<SolicitudReservaPage> {
     ref.read(solicitudReservaProvider.notifier).enviarSolicitud(
           alojamientoId: widget.alojamiento.id,
           fechaIngreso: _fechaIngreso!,
-          duracionDias: _unidad == DuracionUnidad.dias
-              ? int.parse(_duracionController.text)
-              : null,
-          duracionMeses: _unidad == DuracionUnidad.meses
-              ? int.parse(_duracionController.text)
-              : null,
+          duracionDias: int.parse(_duracionController.text),
         );
   }
 }
-
-enum DuracionUnidad { dias, meses }

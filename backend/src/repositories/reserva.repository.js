@@ -1,16 +1,40 @@
 const prisma = require('../config/prisma');
 
-const reservaInclude = {
-  alojamiento: true,
-  invitado: {
+// Campos que se incluyen al consultar el invitado en contexto de host.
+const invitadoSelect = {
+  id: true,
+  nombre: true,
+  correo: true,
+  telefono: true,
+  fotoPerfil: true,
+};
+
+// Campos adicionales que se incluyen al crear la reserva.
+const invitadoCreateSelect = {
+  ...invitadoSelect,
+  descripcion: true,
+  modoActivo: true,
+};
+
+// Campos del alojamiento para respuestas de host (incluye anfitrionId para validar permisos).
+const alojamientoHostSelect = {
+  id: true,
+  titulo: true,
+  ubicacion: true,
+  fotografias: true,
+  anfitrionId: true,
+};
+
+// Campos del alojamiento para respuestas del invitado (incluye datos del anfitrión).
+const alojamientoGuestSelect = {
+  id: true,
+  titulo: true,
+  ubicacion: true,
+  fotografias: true,
+  anfitrion: {
     select: {
-      id: true,
       nombre: true,
-      correo: true,
       telefono: true,
-      fotoPerfil: true,
-      descripcion: true,
-      modoActivo: true,
     },
   },
 };
@@ -20,19 +44,19 @@ const reservaRepository = {
     return prisma.reserva.create({
       data: {
         fechaIngreso: data.fechaIngreso,
-        duracionMeses: data.duracionMeses,
         duracionDias: data.duracionDias,
         invitadoId: data.invitadoId,
         alojamientoId: data.alojamientoId,
       },
-      include: reservaInclude,
+      include: {
+        invitado: { select: invitadoCreateSelect },
+        alojamiento: true,
+      },
     });
   },
 
   async findAlojamientoById(id) {
-    return prisma.alojamiento.findUnique({
-      where: { id },
-    });
+    return prisma.alojamiento.findUnique({ where: { id } });
   },
 
   async findPendingByGuestAndAlojamiento(invitadoId, alojamientoId) {
@@ -41,6 +65,60 @@ const reservaRepository = {
         invitadoId,
         alojamientoId,
         estado: 'PENDIENTE',
+      },
+    });
+  },
+
+  async findByGuestId(guestId) {
+    return prisma.reserva.findMany({
+      where: { invitadoId: guestId },
+      include: {
+        alojamiento: {
+          select: alojamientoGuestSelect,
+        },
+      },
+      orderBy: { fechaSolicitud: 'desc' },
+    });
+  },
+
+  async findByHostId(hostId) {
+    return prisma.reserva.findMany({
+      where: {
+        alojamiento: {
+          anfitrionId: hostId,
+        },
+      },
+      include: {
+        invitado: { select: invitadoSelect },
+        alojamiento: {
+          select: alojamientoHostSelect,
+        },
+      },
+      orderBy: { fechaSolicitud: 'desc' },
+    });
+  },
+
+  async findById(id) {
+    return prisma.reserva.findUnique({
+      where: { id },
+      include: {
+        invitado: { select: invitadoSelect },
+        alojamiento: {
+          select: alojamientoHostSelect,
+        },
+      },
+    });
+  },
+
+  async updateStatus(id, status) {
+    return prisma.reserva.update({
+      where: { id },
+      data: { estado: status },
+      include: {
+        invitado: { select: invitadoSelect },
+        alojamiento: {
+          select: alojamientoHostSelect,
+        },
       },
     });
   },

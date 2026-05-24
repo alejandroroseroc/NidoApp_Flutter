@@ -17,6 +17,12 @@ import '../../features/auth/presentation/providers/register_provider.dart';
 import '../../features/alojamientos/data/datasources/alojamiento_remote_datasource.dart';
 import '../../features/alojamientos/data/repositories/alojamiento_repository_impl.dart';
 import '../../features/alojamientos/domain/repositories/alojamiento_repository.dart';
+import '../../features/reservas/data/datasources/reserva_remote_datasource.dart';
+import '../../features/reservas/data/repositories/reserva_repository_impl.dart';
+import '../../features/reservas/domain/repositories/reserva_repository.dart';
+import '../../features/reservas/domain/usecases/get_guest_reservations_usecase.dart';
+import '../../features/reservas/domain/usecases/get_host_reservations_usecase.dart';
+import '../../features/reservas/domain/usecases/update_reservation_status_usecase.dart';
 import '../constants/api_constants.dart';
 import '../services/token_storage_service.dart';
 
@@ -66,4 +72,14 @@ Future<void> setupDependencies() async {
   sl.registerLazySingleton<AlojamientoRepository>(
     () => AlojamientoRepositoryImpl(sl()),
   );
+
+  sl.registerLazySingleton<ReservaRemoteDatasource>(
+    () => ReservaRemoteDatasourceImpl(sl(), sl()),
+  );
+  sl.registerLazySingleton<ReservaRepository>(
+    () => ReservaRepositoryImpl(sl()),
+  );
+  sl.registerFactory(() => GetGuestReservationsUseCase(sl()));
+  sl.registerFactory(() => GetHostReservationsUseCase(sl()));
+  sl.registerFactory(() => UpdateReservationStatusUseCase(sl()));
 }

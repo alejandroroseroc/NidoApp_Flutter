@@ -5,7 +5,6 @@ function formatReserva(reserva) {
   return {
     id: reserva.id,
     fechaIngreso: reserva.fechaIngreso,
-    duracionMeses: reserva.duracionMeses,
     duracionDias: reserva.duracionDias,
     estado: reserva.estado,
     fechaSolicitud: reserva.fechaSolicitud,
@@ -16,7 +15,46 @@ function formatReserva(reserva) {
   };
 }
 
-function validateSolicitud({ fechaIngreso, duracionMeses, duracionDias }) {
+function formatGuestReserva(reserva) {
+  return {
+    id: reserva.id,
+    estado: reserva.estado,
+    fechaIngreso: reserva.fechaIngreso,
+    duracionDias: reserva.duracionDias,
+    fechaSolicitud: reserva.fechaSolicitud,
+    alojamiento: {
+      id: reserva.alojamiento.id,
+      titulo: reserva.alojamiento.titulo,
+      ubicacion: reserva.alojamiento.ubicacion,
+      fotografias: reserva.alojamiento.fotografias,
+      anfitrion: {
+        nombre: reserva.alojamiento.anfitrion.nombre,
+        telefono: reserva.alojamiento.anfitrion.telefono,
+      },
+    },
+  };
+}
+
+function formatHostReserva(reserva) {
+  return {
+    id: reserva.id,
+    estado: reserva.estado,
+    fechaIngreso: reserva.fechaIngreso,
+    duracionDias: reserva.duracionDias,
+    fechaSolicitud: reserva.fechaSolicitud,
+    invitado: reserva.invitado,
+    alojamiento: {
+      id: reserva.alojamiento.id,
+      titulo: reserva.alojamiento.titulo,
+      ubicacion: reserva.alojamiento.ubicacion,
+      fotografias: reserva.alojamiento.fotografias,
+    },
+  };
+}
+
+const ESTADOS_ACTUALIZABLES = ['ACEPTADA', 'RECHAZADA'];
+
+function validateSolicitud({ fechaIngreso, duracionDias }) {
   const ingreso = new Date(fechaIngreso);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -33,37 +71,23 @@ function validateSolicitud({ fechaIngreso, duracionMeses, duracionDias }) {
     throw error;
   }
 
-  const tieneDias = duracionDias !== undefined && duracionDias !== null && duracionDias !== '';
-  const tieneMeses =
-    duracionMeses !== undefined && duracionMeses !== null && duracionMeses !== '';
+  const tieneDias =
+    duracionDias !== undefined && duracionDias !== null && duracionDias !== '';
 
-  if (tieneDias && tieneMeses) {
-    const error = new Error('Indica la duracion en dias o meses, no ambas');
+  if (!tieneDias) {
+    const error = new Error('La duracion en dias es obligatoria');
     error.statusCode = 400;
     throw error;
   }
 
-  if (!tieneDias && !tieneMeses) {
-    const error = new Error('La duracion es obligatoria');
+  const dias = Number(duracionDias);
+  if (!Number.isInteger(dias) || dias < 1 || dias > 365) {
+    const error = new Error('La duracion debe estar entre 1 y 365 dias');
     error.statusCode = 400;
     throw error;
   }
 
-  const dias = tieneDias ? Number(duracionDias) : null;
-  if (tieneDias && (!Number.isInteger(dias) || dias < 1 || dias > 730)) {
-    const error = new Error('La duracion debe estar entre 1 y 730 dias');
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const meses = tieneMeses ? Number(duracionMeses) : null;
-  if (tieneMeses && (!Number.isInteger(meses) || meses < 1 || meses > 24)) {
-    const error = new Error('La duracion debe estar entre 1 y 24 meses');
-    error.statusCode = 400;
-    throw error;
-  }
-
-  return { ingreso, dias, meses };
+  return { ingreso, dias };
 }
 
 const reservaService = {
@@ -104,16 +128,75 @@ const reservaService = {
       throw error;
     }
 
-    const { ingreso, dias, meses } = validateSolicitud(data);
+    const { ingreso, dias } = validateSolicitud(data);
     const reserva = await reservaRepository.create({
       alojamientoId: data.alojamientoId,
       invitadoId: usuarioId,
       fechaIngreso: ingreso,
-      duracionMeses: meses ?? 1,
       duracionDias: dias,
     });
 
     return formatReserva(reserva);
+  },
+
+  async getGuestReservations(guestId) {
+    const usuario = await userRepository.findById(guestId);
+    if (!usuario) {
+      const error = new Error('Usuario no encontrado');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const reservas = await reservaRepository.findByGuestId(guestId);
+    return reservas.map(formatGuestReserva);
+  },
+
+  async getHostReservations(hostId) {
+    const usuario = await userRepository.findById(hostId);
+    if (!usuario) {
+      const error = new Error('Usuario no encontrado');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    if (usuario.modoActivo !== 'ANFITRION') {
+      const error = new Error('Debes estar en modo anfitrion para ver solicitudes de reserva');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    const reservas = await reservaRepository.findByHostId(hostId);
+    return reservas.map(formatHostReserva);
+  },
+
+  async updateReservationStatus(reservationId, newStatus, hostId) {
+    if (!ESTADOS_ACTUALIZABLES.includes(newStatus)) {
+      const error = new Error('El estado debe ser ACEPTADA o RECHAZADA');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const reserva = await reservaRepository.findById(reservationId);
+    if (!reserva) {
+      const error = new Error('Reserva no encontrada');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    if (reserva.alojamiento.anfitrionId !== hostId) {
+      const error = new Error('No tienes permiso para gestionar esta reserva');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    if (reserva.estado !== 'PENDIENTE') {
+      const error = new Error('Solo puedes gestionar reservas en estado pendiente');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const updated = await reservaRepository.updateStatus(reservationId, newStatus);
+    return formatHostReserva(updated);
   },
 };
 
