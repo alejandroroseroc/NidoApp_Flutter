@@ -165,6 +165,14 @@ class ActiveModeContent extends StatelessWidget {
               },
               child: const Text('Mis publicaciones'),
             ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/host/reservations');
+              },
+              icon: const Icon(Icons.inbox_outlined),
+              label: const Text('Ver solicitudes'),
+            ),
           ] else ...[
             const SizedBox(height: 32),
             AppPrimaryButton(
@@ -176,6 +184,14 @@ class ActiveModeContent extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/mis-reservas');
+              },
+              icon: const Icon(Icons.bookmark_outline),
+              label: const Text('Mis reservas'),
             ),
           ],
         ],

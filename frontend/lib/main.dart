@@ -15,6 +15,8 @@ import 'features/alojamientos/presentation/pages/explorar_alojamientos_page.dart
 import 'features/alojamientos/presentation/pages/mis_publicaciones_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/profile/presentation/pages/profile_page.dart';
+import 'features/reservas/presentation/pages/host_reservations_page.dart';
+import 'features/reservas/presentation/pages/mis_reservas_page.dart';
 import 'features/reservas/presentation/pages/solicitud_reserva_page.dart';
 import 'features/style_guide/presentation/style_guide_page.dart';
 
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
               ModalRoute.of(context)!.settings.arguments as Alojamiento;
           return SolicitudReservaPage(alojamiento: alojamiento);
         },
+        '/mis-reservas': (_) => const MisReservasPage(),
+        '/host/reservations': (_) => const HostReservationsPage(),
         '/mis-publicaciones': (_) => const MisPublicacionesPage(),
         '/crear-alojamiento': (_) => const CrearAlojamientoPage(),
         '/editar-alojamiento': (context) {

@@ -39,8 +39,7 @@ class SolicitudReservaNotifier extends StateNotifier<SolicitudReservaState> {
   Future<void> enviarSolicitud({
     required String alojamientoId,
     required DateTime fechaIngreso,
-    int? duracionMeses,
-    int? duracionDias,
+    required int duracionDias,
   }) async {
     state = state.copyWith(
       isLoading: true,
@@ -55,8 +54,7 @@ class SolicitudReservaNotifier extends StateNotifier<SolicitudReservaState> {
         data: {
           'alojamientoId': alojamientoId,
           'fechaIngreso': fechaIngreso.toIso8601String(),
-          if (duracionMeses != null) 'duracionMeses': duracionMeses,
-          if (duracionDias != null) 'duracionDias': duracionDias,
+          'duracionDias': duracionDias,
         },
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
