@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -22,11 +23,16 @@ class ReservationHostCard extends StatelessWidget {
   final VoidCallback onAccept;
   final VoidCallback onReject;
 
+  static final _fmt = NumberFormat('#,##0', 'es_CO');
+
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
     return '$day/$month/${date.year}';
   }
+
+  String _formatPrecio(double value) => '\$${_fmt.format(value)}';
+
 
   String? _imageUrl(String? path) {
     if (path == null || path.isEmpty) return null;
@@ -161,6 +167,26 @@ class ReservationHostCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (reserva.precioTotal != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.attach_money_outlined,
+                    size: 18,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Total: ${_formatPrecio(reserva.precioTotal!)}',
+                    style: AppTextStyles.small.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             if (reserva.esPendiente) ...[
               const SizedBox(height: 20),
               if (isProcessing)

@@ -18,6 +18,8 @@ class Reserva extends Equatable {
     required this.alojamientoTitulo,
     required this.alojamientoUbicacion,
     this.alojamientoFoto,
+    this.precioNoche,
+    this.precioTotal,
   });
 
   final String id;
@@ -33,11 +35,13 @@ class Reserva extends Equatable {
   final String alojamientoTitulo;
   final String alojamientoUbicacion;
   final String? alojamientoFoto;
+  final double? precioNoche;
+  final double? precioTotal;
 
   bool get esPendiente => estado == EstadoReserva.pendiente;
 
   String get duracionTexto =>
-      '$duracionDias ${duracionDias == 1 ? 'dia' : 'dias'}';
+      '$duracionDias ${duracionDias == 1 ? 'noche' : 'noches'}';
 
   @override
   List<Object?> get props => [
@@ -54,5 +58,7 @@ class Reserva extends Equatable {
     alojamientoTitulo,
     alojamientoUbicacion,
     alojamientoFoto,
+    precioNoche,
+    precioTotal,
   ];
 }

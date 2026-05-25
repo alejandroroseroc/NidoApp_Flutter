@@ -190,7 +190,8 @@ class AlojamientoForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           AppTextField(
-            label: 'Precio mensual',
+            label: 'Precio por noche (COP)',
+            hintText: 'Ej: 50000',
             controller: precioController,
             keyboardType: TextInputType.number,
             validator: (value) {
@@ -200,6 +201,15 @@ class AlojamientoForm extends StatelessWidget {
               }
               return null;
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 4),
+            child: Text(
+              'Este es el precio que el invitado pagará por cada noche de estadía',
+              style: AppTextStyles.small.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
           const SizedBox(height: 16),
 

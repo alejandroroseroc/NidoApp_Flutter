@@ -185,7 +185,7 @@ class _MisPublicacionesPageState extends ConsumerState<MisPublicacionesPage> {
                     final item = state.publicaciones[index];
                     return _PublicacionCard(
                       alojamiento: item,
-                      precioLabel: _formatPrecio(item.precioMensual),
+                      precioLabel: _formatPrecio(item.precioNoche),
                       onEdit: () async {
                         final updated = await Navigator.of(
                           context,
@@ -280,7 +280,7 @@ class _PublicacionCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '$precioLabel / mes',
+            '$precioLabel / dia',
             style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),

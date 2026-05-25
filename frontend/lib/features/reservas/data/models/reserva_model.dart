@@ -15,6 +15,8 @@ class ReservaModel extends Reserva {
     required super.alojamientoTitulo,
     required super.alojamientoUbicacion,
     super.alojamientoFoto,
+    super.precioNoche,
+    super.precioTotal,
   });
 
   factory ReservaModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,8 @@ class ReservaModel extends Reserva {
       alojamientoTitulo: alojamiento['titulo'] as String? ?? '',
       alojamientoUbicacion: alojamiento['ubicacion'] as String? ?? '',
       alojamientoFoto: _firstPhoto(fotos),
+      precioNoche: _parseDouble(json['precioNoche']),
+      precioTotal: _parseDouble(json['precioTotal']),
     );
   }
 
@@ -55,5 +59,11 @@ class ReservaModel extends Reserva {
       return fotos.first as String?;
     }
     return null;
+  }
+
+  static double? _parseDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
   }
 }

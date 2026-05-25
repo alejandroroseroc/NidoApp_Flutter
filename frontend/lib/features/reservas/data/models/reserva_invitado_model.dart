@@ -13,6 +13,8 @@ class ReservaInvitadoModel extends ReservaInvitado {
     super.alojamientoFoto,
     required super.anfitrionNombre,
     super.anfitrionTelefono,
+    super.precioNoche,
+    super.precioTotal,
   });
 
   factory ReservaInvitadoModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,8 @@ class ReservaInvitadoModel extends ReservaInvitado {
       alojamientoFoto: _firstPhoto(fotos),
       anfitrionNombre: anfitrion['nombre'] as String? ?? '',
       anfitrionTelefono: anfitrion['telefono'] as String?,
+      precioNoche: _parseDouble(json['precioNoche']),
+      precioTotal: _parseDouble(json['precioTotal']),
     );
   }
 
@@ -51,5 +55,11 @@ class ReservaInvitadoModel extends ReservaInvitado {
       return fotos.first as String?;
     }
     return null;
+  }
+
+  static double? _parseDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
   }
 }

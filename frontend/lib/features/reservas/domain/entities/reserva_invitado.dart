@@ -16,6 +16,8 @@ class ReservaInvitado extends Equatable {
     this.alojamientoFoto,
     required this.anfitrionNombre,
     this.anfitrionTelefono,
+    this.precioNoche,
+    this.precioTotal,
   });
 
   final String id;
@@ -29,6 +31,8 @@ class ReservaInvitado extends Equatable {
   final String? alojamientoFoto;
   final String anfitrionNombre;
   final String? anfitrionTelefono;
+  final double? precioNoche;
+  final double? precioTotal;
 
   @override
   List<Object?> get props => [
@@ -43,5 +47,7 @@ class ReservaInvitado extends Equatable {
     alojamientoFoto,
     anfitrionNombre,
     anfitrionTelefono,
+    precioNoche,
+    precioTotal,
   ];
 }

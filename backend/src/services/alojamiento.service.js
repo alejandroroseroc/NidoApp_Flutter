@@ -33,6 +33,7 @@ function formatAlojamiento(alojamiento) {
 
   return {
     ...rest,
+    precioNoche: precio,
     precioMensual: precio,
     precio,
     servicios: (servicios || []).map((servicio) => servicio.nombre),

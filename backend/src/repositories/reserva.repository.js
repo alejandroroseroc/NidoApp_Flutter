@@ -45,6 +45,8 @@ const reservaRepository = {
       data: {
         fechaIngreso: data.fechaIngreso,
         duracionDias: data.duracionDias,
+        precioNoche: data.precioNoche ?? null,
+        precioTotal: data.precioTotal ?? null,
         invitadoId: data.invitadoId,
         alojamientoId: data.alojamientoId,
       },
