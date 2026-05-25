@@ -507,13 +507,13 @@ class _AlojamientoCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _formatPrecio(alojamiento.precioMensual),
+                          _formatPrecio(alojamiento.precioNoche),
                           style: AppTextStyles.subtitle.copyWith(
                             color: AppColors.primary,
                             fontSize: 18,
                           ),
                         ),
-                        Text('por mes', style: AppTextStyles.small),
+                        Text('/ noche', style: AppTextStyles.small),
                       ],
                     ),
                     if (alojamiento.servicios.isNotEmpty)

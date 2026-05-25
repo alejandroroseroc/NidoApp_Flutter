@@ -14,7 +14,7 @@ class Alojamiento extends Equatable {
     required this.tipoEspacio,
     required this.tipoPrivacidad,
     required this.tipoAcceso,
-    required this.precioMensual,
+    required this.precioNoche,
     required this.ubicacion,
     required this.estado,
     required this.anfitrionId,
@@ -32,7 +32,7 @@ class Alojamiento extends Equatable {
   final String tipoAcceso;
   final String? reglas;
   final List<String> servicios;
-  final double precioMensual;
+  final double precioNoche;
   final String ubicacion;
   final List<String> fotografias;
   final EstadoAlojamiento estado;
@@ -45,5 +45,5 @@ class Alojamiento extends Equatable {
       fotografias.isNotEmpty ? fotografias.first : null;
 
   @override
-  List<Object?> get props => [id, titulo, estado, precioMensual];
+  List<Object?> get props => [id, titulo, estado, precioNoche];
 }

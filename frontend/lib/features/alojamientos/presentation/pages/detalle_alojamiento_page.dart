@@ -149,7 +149,7 @@ class _DetalleAlojamientoPageState
 
                   // Precio destacado
                   _PrecioCard(
-                    precio: _formatPrecio(alojamiento.precioMensual),
+                    precio: _formatPrecio(alojamiento.precioNoche),
                   ),
 
                   const SizedBox(height: 24),
@@ -390,8 +390,15 @@ class _PrecioCard extends StatelessWidget {
                 ),
               ),
               Text(
-                'por mes',
+                'por noche',
                 style: AppTextStyles.small.copyWith(color: AppColors.success),
+              ),
+              Text(
+                'El total se calculará según los días de estadía',
+                style: AppTextStyles.small.copyWith(
+                  color: AppColors.success.withOpacity(0.8),
+                  fontSize: 11,
+                ),
               ),
             ],
           ),

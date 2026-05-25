@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -16,11 +17,16 @@ class MiReservaCard extends StatelessWidget {
   final VoidCallback? onReviewPressed;
   final VoidCallback? onViewReviewsPressed;
 
+  static final _fmt = NumberFormat('#,##0', 'es_CO');
+
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
     return '$day/$month/${date.year}';
   }
+
+  String _formatPrecio(double value) => '\$${_fmt.format(value)}';
+
 
   String? _imageUrl(String? path) {
     if (path == null || path.isEmpty) return null;
@@ -104,12 +110,20 @@ class MiReservaCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Duración: ${reserva.duracionDias} día${reserva.duracionDias == 1 ? '' : 's'}',
+                  'Duración: ${reserva.duracionDias} noche${reserva.duracionDias == 1 ? '' : 's'}',
                   style: TextStyle(
                     color: Colors.grey.shade800,
                     fontSize: 13,
                   ),
                 ),
+                if (reserva.precioTotal != null) ...[
+                  const SizedBox(height: 8),
+                  _SeccionPrecio(
+                    precioNoche: reserva.precioNoche,
+                    precioTotal: reserva.precioTotal!,
+                    formatPrecio: _formatPrecio,
+                  ),
+                ],
                 const SizedBox(height: 12),
                 _EstadoBadge(estado: reserva.estado),
                 if (reserva.estado == EstadoReservaInvitado.aceptada) ...[
@@ -193,6 +207,70 @@ class MiReservaCard extends StatelessWidget {
       color: Colors.grey.shade200,
       child: const Center(
         child: Icon(Icons.home_outlined, size: 48, color: Colors.grey),
+      ),
+    );
+  }
+}
+
+class _SeccionPrecio extends StatelessWidget {
+  const _SeccionPrecio({
+    required this.precioNoche,
+    required this.precioTotal,
+    required this.formatPrecio,
+  });
+
+  final double? precioNoche;
+  final double precioTotal;
+  final String Function(double) formatPrecio;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE8F5E9),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF2D7D6F).withOpacity(0.4)),
+      ),
+      child: Column(
+        children: [
+          if (precioNoche != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Precio por noche:',
+                  style: TextStyle(fontSize: 12, color: Color(0xFF2D7D6F)),
+                ),
+                Text(
+                  formatPrecio(precioNoche!),
+                  style: const TextStyle(fontSize: 12, color: Color(0xFF2D7D6F)),
+                ),
+              ],
+            ),
+          if (precioNoche != null) const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Total de la reserva:',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D7D6F),
+                ),
+              ),
+              Text(
+                formatPrecio(precioTotal),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D7D6F),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

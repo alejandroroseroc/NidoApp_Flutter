@@ -103,6 +103,8 @@ model Reserva {
   id             String        @id @default(uuid())
   fechaIngreso   DateTime
   duracionDias   Int
+  precioNoche    Float?
+  precioTotal    Float?
   estado         EstadoReserva @default(PENDIENTE)
   fechaSolicitud DateTime      @default(now())
   invitado       Usuario       @relation(fields: [invitadoId], references: [id])

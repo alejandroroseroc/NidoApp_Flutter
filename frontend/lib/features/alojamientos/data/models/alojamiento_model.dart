@@ -8,7 +8,7 @@ class AlojamientoModel extends Alojamiento {
     required super.tipoEspacio,
     required super.tipoPrivacidad,
     required super.tipoAcceso,
-    required super.precioMensual,
+    required super.precioNoche,
     required super.ubicacion,
     required super.estado,
     required super.anfitrionId,
@@ -33,7 +33,7 @@ class AlojamientoModel extends Alojamiento {
           (json['servicios'] as List<dynamic>? ?? [])
               .map((item) => item.toString())
               .toList(),
-      precioMensual: _readPrecio(json),
+      precioNoche: _readPrecio(json),
       ubicacion: json['ubicacion'] as String,
       fotografias:
           (json['fotografias'] as List<dynamic>? ?? [])
@@ -51,7 +51,7 @@ class AlojamientoModel extends Alojamiento {
   }
 
   static double _readPrecio(Map<String, dynamic> json) {
-    final value = json['precioMensual'] ?? json['precio'];
+    final value = json['precioNoche'] ?? json['precioMensual'] ?? json['precio'];
     if (value is num) return value.toDouble();
     return double.tryParse(value.toString()) ?? 0;
   }

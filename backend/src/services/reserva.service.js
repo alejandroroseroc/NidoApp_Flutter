@@ -7,6 +7,8 @@ function formatReserva(reserva) {
     id: reserva.id,
     fechaIngreso: reserva.fechaIngreso,
     duracionDias: reserva.duracionDias,
+    precioNoche: reserva.precioNoche ?? null,
+    precioTotal: reserva.precioTotal ?? null,
     estado: reserva.estado,
     fechaSolicitud: reserva.fechaSolicitud,
     invitadoId: reserva.invitadoId,
@@ -22,6 +24,8 @@ function formatGuestReserva(reserva) {
     estado: reserva.estado,
     fechaIngreso: reserva.fechaIngreso,
     duracionDias: reserva.duracionDias,
+    precioNoche: reserva.precioNoche ?? null,
+    precioTotal: reserva.precioTotal ?? null,
     fechaSolicitud: reserva.fechaSolicitud,
     alojamiento: {
       id: reserva.alojamiento.id,
@@ -42,6 +46,8 @@ function formatHostReserva(reserva) {
     estado: reserva.estado,
     fechaIngreso: reserva.fechaIngreso,
     duracionDias: reserva.duracionDias,
+    precioNoche: reserva.precioNoche ?? null,
+    precioTotal: reserva.precioTotal ?? null,
     fechaSolicitud: reserva.fechaSolicitud,
     invitado: reserva.invitado,
     alojamiento: {
@@ -130,11 +136,15 @@ const reservaService = {
     }
 
     const { ingreso, dias } = validateSolicitud(data);
+    const precioNoche = alojamiento.precio;
+    const precioTotal = precioNoche * dias;
     const reserva = await reservaRepository.create({
       alojamientoId: data.alojamientoId,
       invitadoId: usuarioId,
       fechaIngreso: ingreso,
       duracionDias: dias,
+      precioNoche,
+      precioTotal,
     });
 
     return formatReserva(reserva);

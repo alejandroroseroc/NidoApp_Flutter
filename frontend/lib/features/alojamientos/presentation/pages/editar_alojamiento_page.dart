@@ -60,7 +60,7 @@ class _EditarAlojamientoPageState extends ConsumerState<EditarAlojamientoPage> {
     _tituloController.text = alojamiento.titulo;
     _descripcionController.text = alojamiento.descripcion;
     _reglasController.text = alojamiento.reglas ?? '';
-    _precioController.text = alojamiento.precioMensual.toStringAsFixed(0);
+    _precioController.text = alojamiento.precioNoche.toStringAsFixed(0);
 
     // Parse ubicacion into ciudad + barrio
     final ubicacion = alojamiento.ubicacion;
