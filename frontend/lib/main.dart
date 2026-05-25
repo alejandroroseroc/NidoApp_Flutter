@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'NidoApp',
+      title: 'Nido App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routes: {

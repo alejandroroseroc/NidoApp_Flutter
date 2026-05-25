@@ -5,10 +5,7 @@ import 'app_colors.dart';
 class AppTextStyles {
   const AppTextStyles._();
 
-  static const String fontFamily = 'Inter';
-
   static const TextStyle title = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 28,
     height: 1.2,
     fontWeight: FontWeight.w700,
@@ -16,7 +13,6 @@ class AppTextStyles {
   );
 
   static const TextStyle subtitle = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 20,
     height: 1.3,
     fontWeight: FontWeight.w600,
@@ -24,7 +20,6 @@ class AppTextStyles {
   );
 
   static const TextStyle body = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 16,
     height: 1.5,
     fontWeight: FontWeight.w400,
@@ -32,7 +27,6 @@ class AppTextStyles {
   );
 
   static const TextStyle small = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 13,
     height: 1.4,
     fontWeight: FontWeight.w400,
@@ -40,14 +34,12 @@ class AppTextStyles {
   );
 
   static const TextStyle button = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 16,
     height: 1.2,
     fontWeight: FontWeight.w700,
   );
 
   static const TextStyle helper = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 12,
     height: 1.4,
     fontWeight: FontWeight.w500,
@@ -55,7 +47,6 @@ class AppTextStyles {
   );
 
   static const TextStyle error = TextStyle(
-    fontFamily: fontFamily,
     fontSize: 12,
     height: 1.4,
     fontWeight: FontWeight.w500,
