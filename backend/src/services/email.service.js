@@ -2,20 +2,27 @@ const nodemailer = require('nodemailer');
 
 // Configura el transporte SMTP con Gmail.
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  connectionTimeout: 10000,
+  socketTimeout: 15000,
 });
 
 const emailService = {
   async sendReservaStatusUpdate({ correoInvitado, nombreInvitado, tituloAlojamiento, ubicacion, fechaIngreso, duracionDias, nuevoEstado }) {
     const aceptada = nuevoEstado === 'ACEPTADA';
 
-    const estadoColor  = aceptada ? '#2D7D6F' : '#C0392B';
-    const estadoBg     = aceptada ? '#F5FFFE' : '#FFF5F5';
-    const estadoTexto  = aceptada ? '✓ Reserva Aceptada' : '✗ Reserva No Aceptada';
+    const estadoColor = aceptada ? '#2D7D6F' : '#C0392B';
+    const estadoBg = aceptada ? '#F5FFFE' : '#FFF5F5';
+    const estadoTexto = aceptada ? '✓ Reserva Aceptada' : '✗ Reserva No Aceptada';
     const mensajePrincipal = aceptada
       ? `¡Buenas noticias! El anfitrión ha <strong>aceptado</strong> tu solicitud de reserva. Pronto podrás coordinar los detalles de tu llegada.`
       : `Lamentablemente el anfitrión ha <strong>rechazado</strong> tu solicitud de reserva en esta ocasión. Te invitamos a explorar otros alojamientos disponibles en NidoApp.`;
