@@ -280,7 +280,7 @@ class _PublicacionCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '$precioLabel / mes',
+            '$precioLabel / dia',
             style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
