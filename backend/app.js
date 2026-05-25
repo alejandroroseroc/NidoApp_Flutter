@@ -9,7 +9,16 @@ const app = express();
 
 // Seguridad y parseo
 app.use(helmet());
-app.use(cors());
+
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? '*'
+    : ['http://localhost:3000', 'http://10.0.2.2:3000'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
