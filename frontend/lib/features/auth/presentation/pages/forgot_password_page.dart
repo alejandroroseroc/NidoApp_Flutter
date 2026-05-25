@@ -67,19 +67,31 @@ class ForgotPasswordPage extends ConsumerWidget {
 }
 
 // Paso 1: ingresar el correo para recibir el código.
-class _EmailForm extends ConsumerWidget {
+class _EmailForm extends ConsumerStatefulWidget {
   const _EmailForm({required this.formKey, required this.emailRegex});
 
   final GlobalKey<FormState> formKey;
   final RegExp emailRegex;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_EmailForm> createState() => _EmailFormState();
+}
+
+class _EmailFormState extends ConsumerState<_EmailForm> {
+  final _correoController = TextEditingController();
+
+  @override
+  void dispose() {
+    _correoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(forgotPasswordProvider);
-    String correo = '';
 
     return Form(
-      key: formKey,
+      key: widget.formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -100,13 +112,13 @@ class _EmailForm extends ConsumerWidget {
           const SizedBox(height: 40),
           AppTextField(
             label: 'Correo electronico',
+            controller: _correoController,
             keyboardType: TextInputType.emailAddress,
-            onChanged: (value) => correo = value.trim(),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'El correo es obligatorio';
               }
-              if (!emailRegex.hasMatch(value.trim())) {
+              if (!widget.emailRegex.hasMatch(value.trim())) {
                 return 'Ingresa un correo valido';
               }
               return null;
@@ -117,8 +129,10 @@ class _EmailForm extends ConsumerWidget {
             text: 'Enviar codigo',
             isLoading: state.isLoading,
             onPressed: () {
-              if (formKey.currentState?.validate() ?? false) {
-                ref.read(forgotPasswordProvider.notifier).enviarCodigo(correo);
+              if (widget.formKey.currentState?.validate() ?? false) {
+                ref
+                    .read(forgotPasswordProvider.notifier)
+                    .enviarCodigo(_correoController.text.trim());
               }
             },
           ),
