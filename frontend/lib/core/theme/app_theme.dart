@@ -22,7 +22,6 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.background,
-      fontFamily: AppTextStyles.fontFamily,
       textTheme: AppTextStyles.textTheme,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.background,

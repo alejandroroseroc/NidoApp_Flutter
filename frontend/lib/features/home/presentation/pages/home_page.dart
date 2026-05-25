@@ -34,10 +34,9 @@ class HomePage extends ConsumerWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(
-          'NidoApp',
-          style: AppTextStyles.title.copyWith(color: Colors.white),
-        ),
+        toolbarHeight: 76,
+        titleSpacing: 24,
+        title: const _BrandTitle(),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
@@ -76,6 +75,53 @@ class HomePage extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _BrandTitle extends StatelessWidget {
+  const _BrandTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.16),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+          ),
+          child: const Icon(
+            Icons.home_rounded,
+            color: Colors.white,
+            size: 25,
+          ),
+        ),
+        const SizedBox(width: 10),
+        RichText(
+          text: TextSpan(
+            style: AppTextStyles.subtitle.copyWith(
+              color: Colors.white,
+              fontSize: 23,
+              height: 1,
+            ),
+            children: [
+              const TextSpan(text: 'Nido'),
+              TextSpan(
+                text: 'App',
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.82),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
