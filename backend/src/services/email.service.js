@@ -1,28 +1,17 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-// Configura el transporte SMTP con Gmail.
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-  connectionTimeout: 10000,
-  socketTimeout: 15000,
-});
+// Usa Resend (API HTTPS) en lugar de SMTP para compatibilidad con Railway.
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const FROM = 'NidoApp <onboarding@resend.dev>';
 
 const emailService = {
   async sendReservaStatusUpdate({ correoInvitado, nombreInvitado, tituloAlojamiento, ubicacion, fechaIngreso, duracionDias, nuevoEstado }) {
     const aceptada = nuevoEstado === 'ACEPTADA';
 
-    const estadoColor = aceptada ? '#2D7D6F' : '#C0392B';
-    const estadoBg = aceptada ? '#F5FFFE' : '#FFF5F5';
-    const estadoTexto = aceptada ? '✓ Reserva Aceptada' : '✗ Reserva No Aceptada';
+    const estadoColor  = aceptada ? '#2D7D6F' : '#C0392B';
+    const estadoBg     = aceptada ? '#F5FFFE' : '#FFF5F5';
+    const estadoTexto  = aceptada ? '✓ Reserva Aceptada' : '✗ Reserva No Aceptada';
     const mensajePrincipal = aceptada
       ? `¡Buenas noticias! El anfitrión ha <strong>aceptado</strong> tu solicitud de reserva. Pronto podrás coordinar los detalles de tu llegada.`
       : `Lamentablemente el anfitrión ha <strong>rechazado</strong> tu solicitud de reserva en esta ocasión. Te invitamos a explorar otros alojamientos disponibles en NidoApp.`;
@@ -34,8 +23,8 @@ const emailService = {
       day: 'numeric',
     });
 
-    const mailOptions = {
-      from: `"NidoApp" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: FROM,
       to: correoInvitado,
       subject: `Tu reserva fue ${aceptada ? 'aceptada' : 'rechazada'} — NidoApp`,
       html: `
@@ -51,7 +40,6 @@ const emailService = {
             <p style="font-size: 16px; margin-top: 0;">Hola, <strong>${nombreInvitado}</strong>.</p>
             <p style="font-size: 15px; line-height: 1.6;">${mensajePrincipal}</p>
 
-            <!-- Badge de estado -->
             <div style="
               display: inline-block;
               background: ${estadoBg};
@@ -64,10 +52,8 @@ const emailService = {
               margin: 8px 0 24px;
             ">${estadoTexto}</div>
 
-            <!-- Detalles de la reserva -->
             <div style="background: #F5FFFE; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px;">
               <h3 style="margin: 0 0 14px; color: #2D7D6F; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Detalles de la reserva</h3>
-
               <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
                 <tr>
                   <td style="padding: 6px 0; color: #4A6B68; width: 140px;">Alojamiento</td>
@@ -99,14 +85,12 @@ const emailService = {
 
         </div>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   },
 
   async sendPasswordResetCode(correo, codigo) {
-    const mailOptions = {
-      from: `"NidoApp" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: FROM,
       to: correo,
       subject: 'Recupera tu contraseña — NidoApp',
       html: `
@@ -132,9 +116,7 @@ const emailService = {
           </p>
         </div>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   },
 };
 
